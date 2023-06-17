@@ -1,6 +1,6 @@
-# cttrecapp
+# 计时打卡App
 
-Insert the purpose of this project and some interesting infos here
+为方便追踪动作及发生时间戳的打卡工具类应用程序，没有找到满足需求的，只好自己写一个
 
 ## Credits
 
