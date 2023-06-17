@@ -17,6 +17,16 @@ sap.ui.define(
                 oModel.setDefaultBindingMode("OneWay");
                 return oModel;
             },
+            createCheckTypesModel: function () {
+                const oModel = new JSONModel({ "new": { "text": "" }, "types": [] });
+                oModel.setDefaultBindingMode("TwoWay");
+                return oModel;
+            },
+            createTypedCheckInModel: function () {
+                const oModel = new JSONModel({ "items": [] });
+                oModel.setDefaultBindingMode("TwoWay");
+                return oModel;
+            }
         };
     }
 );

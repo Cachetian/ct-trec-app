@@ -1,5 +1,30 @@
 <mvc:View controllerName="ct.trec.cttrecapp.controller.MainView" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
-        <content />
+        <content>
+            <Panel>
+                <content>
+                    <Input value="{ckt>/new/text}"></Input>
+                    <Button text="New Check-in Type" press="onNewCheckInType"></Button>
+                </content>
+            </Panel>
+            <Panel>
+                <content>
+                    <OverflowToolbar content="{ckt>/types}">
+                        <content>
+                            <Button text="{ckt>text}" press="onTypedCheckIn"></Button>
+                        </content>
+                    </OverflowToolbar>
+                </content>
+            </Panel>
+            <Panel>
+                <content>
+                    <List items="{tci>/items}">
+                        <items>
+                            <StandardListItem title="{tci>value}" info="{tci>timestamp}"></StandardListItem>
+                        </items>
+                    </List>
+                </content>
+            </Panel>
+        </content>
     </Page>
 </mvc:View>

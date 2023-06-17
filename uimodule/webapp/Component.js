@@ -24,6 +24,9 @@ sap.ui.define(["sap/ui/core/UIComponent", "sap/ui/Device", "ct/trec/cttrecapp/mo
 
             // set the device model
             this.setModel(models.createDeviceModel(), "device");
+            this.setModel(models.createCheckTypesModel(), "ckt");
+            this.setModel(models.createTypedCheckInModel(), "tci");
+
         },
     });
 });
