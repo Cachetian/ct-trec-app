@@ -7,13 +7,20 @@
   "private": true,
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1.10.6",
-    "@sap/cds": "^6",
-    "express": "^4"
+    "@sap/cds": "^6.8.4",
+    "express": "^4.18.2",
+    "@sap/xssec": "^3.2.17",
+    "passport": "^0.6.0"
   },
   "devDependencies": {
     "sqlite3": "^5"
   },
   "scripts": {
     "start": "cds-serve"
+  },
+  "cds": {
+    "requires": {
+      "auth": "xsuaa"
+    }
   }
 }
