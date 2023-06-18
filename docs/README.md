@@ -14,3 +14,6 @@ End user can new a check-in type
 
 #### 1. NF01-Export-Import-All-Data
 End user can export/import all input data
+
+#### 2. NF02-Data-Persistency
+End user can persist records on broswer refresh on use remote odata
