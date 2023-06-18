@@ -18,12 +18,12 @@ sap.ui.define(
                 return oModel;
             },
             createCheckTypesModel: function () {
-                const oModel = new JSONModel({ "new": { "text": "" }, "types": [] });
+                const oModel = new JSONModel({ "new": { "text": "" }, "types": [{ "text": "Do" }] });
                 oModel.setDefaultBindingMode("TwoWay");
                 return oModel;
             },
             createTypedCheckInModel: function () {
-                const oModel = new JSONModel({ "items": [] });
+                const oModel = new JSONModel({ "items": [{ "value": "Do", "timestamp": new Date() }] });
                 oModel.setDefaultBindingMode("TwoWay");
                 return oModel;
             }
