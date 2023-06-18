@@ -23,6 +23,7 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: ct-trec-app-auth
+      - name: ct-trec-app-db
 
   - name: ct-trec-app
     type: approuter.nodejs
@@ -40,6 +41,14 @@ modules:
           forwardAuthToken: true
       - name: ct-trec-app-auth
 
+  - name: ct-trec-app-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: ct-trec-app-db
+
 resources:
   - name: ct-trec-app-auth
     type: org.cloudfoundry.managed-service
@@ -50,3 +59,8 @@ resources:
       config:
         xsappname: ct-trec-app-${org}-${space}
         tenant-mode: dedicated
+  - name: ct-trec-app-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
