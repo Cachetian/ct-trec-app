@@ -1,4 +1,5 @@
-<mvc:View controllerName="ct.trec.cttrecapp.controller.MainView" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+<mvc:View controllerName="ct.trec.cttrecapp.controller.MainView" xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true" xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
         <content>
             <Panel>
@@ -25,6 +26,21 @@
                     </List>
                 </content>
             </Panel>
+            <Panel>
+                <content>
+                    <TextArea value="{view>/message}" width="100%" height="12rem">
+                    </TextArea>
+                </content>
+            </Panel>
         </content>
+        <footer>
+            <OverflowToolbar>
+                <content>
+                    <ToolbarSpacer></ToolbarSpacer>
+                    <Button text="Export" press="onExportAllData"></Button>
+                    <Button text="Import" press="onImportAllData"></Button>
+                </content>
+            </OverflowToolbar>
+        </footer>
     </Page>
 </mvc:View>
