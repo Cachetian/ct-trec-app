@@ -1,12 +1,12 @@
 namespace ct.trec.db;
 
 entity CheckInTypes {
-  key ID   : UUID;
+  key ID   : Integer;
       text : String;
 }
 
 entity TypedCheckIns {
-  key ID        : UUID;
+  key ID        : Integer;
       value     : String;
       timestamp : Timestamp;
 }

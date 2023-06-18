@@ -11,7 +11,7 @@
     "description": "{{appDescription}}",
     "dataSources": {
       "mainService": {
-        "uri": "/service/record/",
+        "uri": "/v2/service/record/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -62,7 +62,6 @@
       },
       "": {
         "dataSource": "mainService",
-        "preload": true,
         "settings": {}
       }
     },

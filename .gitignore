@@ -33,3 +33,4 @@ mta_archives/
 # add by ct local
 .e*
 package-lock.json
+dist

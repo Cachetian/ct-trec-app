@@ -20,6 +20,6 @@ server:
       afterMiddleware: compression
     - name: ui5-middleware-simpleproxy
       afterMiddleware: compression
-      mountPath: /service
+      mountPath: /v2
       configuration:
-        baseUri: "http://localhost:4004"
+        baseUri: "http://localhost:4004/v2"
