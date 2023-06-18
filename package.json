@@ -8,8 +8,9 @@
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1.10.6",
     "@sap/cds": "^6.8.4",
-    "express": "^4.18.2",
+    "@sap/cds-dk": "^6.8.3",
     "@sap/xssec": "^3.2.17",
+    "express": "^4.18.2",
     "passport": "^0.6.0"
   },
   "devDependencies": {
@@ -20,7 +21,13 @@
   },
   "cds": {
     "requires": {
-      "auth": "xsuaa"
+      "auth": "xsuaa",
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "database": "db.sqlite"
+        }
+      }
     }
   }
 }
