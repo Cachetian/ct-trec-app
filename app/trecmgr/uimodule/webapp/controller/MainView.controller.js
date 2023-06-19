@@ -85,6 +85,40 @@ sap.ui.define(
                 this.getModel("tci").refresh();
             },
 
+            onPushAllData: function () {
+                if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+                    const data = {
+                        name: "pushAllData", value: JSON.stringify({
+                            "CheckInTypes": this.getModel("ckt").getData().types,
+                            "TypedCheckIns": this.getModel("tci").getData().items
+                        })
+                    }
+                    this.getModel().create("/AllDatas", data, {
+                        success: () => {
+                            sap.m.MessageToast.show("success");
+                        },
+                        error: (err) => {
+                            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+                        }
+                    });
+                }
+            },
+
+            onPullAllData: function () {
+                if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+                    this.getModel().read("/AllDatas", {
+                        success: (d) => {
+                            const data = JSON.parse(d.results[0].value);
+                            this.getModel("ckt").setProperty("/types", data.CheckInTypes);
+                            this.getModel("tci").setProperty("/items", data.TypedCheckIns);
+                        },
+                        error: (err) => {
+                            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+                        }
+                    });
+                }
+            },
+
             onExportAllData: function () {
                 const data = {
                     "CheckInTypes": this.getModel("ckt").getData(),

@@ -12,8 +12,8 @@ End user can new a check-in type
 
 ### Non-Functional
 
-#### 1. NF01-Export-Import-All-Data
-End user can export/import all input data
+#### 1. NF01-Export-Import-Push-Pull-All-Data
+End user can export/import/push/pull all input data
 
 #### 2. NF02-Data-Persistency
 End user can persist records on broswer refresh on use remote odata

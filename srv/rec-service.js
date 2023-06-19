@@ -1,10 +1,11 @@
 const cds = require('@sap/cds')
+const { log } = require('console')
 class RecordService extends cds.ApplicationService {
 
   /** register custom handlers */
   init() {
 
-    const { CheckInTypes, TypedCheckIns } = this.entities
+    const { CheckInTypes, TypedCheckIns, AllDatas } = this.entities
 
     const memDB = {
       CheckInTypes: [{ ID: 0, "text": "Do" }],
@@ -29,6 +30,26 @@ class RecordService extends cds.ApplicationService {
 
     this.on('READ', TypedCheckIns, (req) => {
       return memDB.TypedCheckIns;
+    })
+
+    this.on('CREATE', AllDatas, (req) => {
+      if (req.data.name === "pushAllData") {
+        const data = JSON.parse(req.data.value)
+        memDB.CheckInTypes = data.CheckInTypes
+        memDB.TypedCheckIns = data.TypedCheckIns
+      }
+      return req.data
+    })
+
+    this.on('READ', AllDatas, (req) => {
+      return {
+        name: "pullAllData", value: JSON.stringify(
+          {
+            CheckInTypes: memDB.CheckInTypes,
+            TypedCheckIns: memDB.TypedCheckIns
+          }
+        )
+      }
     })
 
     return super.init()

@@ -43,6 +43,10 @@
             <OverflowToolbar>
                 <content>
                     <ToolbarSpacer></ToolbarSpacer>
+                    <Button text="Push" press="onPushAllData"
+                        enabled="{view>/settings/use_remote_odata}"></Button>
+                    <Button text="Pull" press="onPullAllData"
+                        enabled="{view>/settings/use_remote_odata}"></Button>
                     <Button text="Export" press="onExportAllData"></Button>
                     <Button text="Import" press="onImportAllData"></Button>
                 </content>
