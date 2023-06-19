@@ -1,9 +1,9 @@
 sap.ui.define(
-    ["./BaseController", "sap/ui/model/json/JSONModel"],
+    ["./BaseController", "sap/ui/model/json/JSONModel", "sap/ui/util/Storage", "../core/eventQueue"],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel) {
+    function (Controller, JSONModel, Storage, eventQueue) {
         "use strict";
 
         return Controller.extend("ct.trec.cttrecapp.controller.MainView", {
@@ -11,7 +11,7 @@ sap.ui.define(
                 this.setModel(new JSONModel({
                     "message": "",
                     "settings": {
-                        "use_remote_odata": true
+                        "use_remote_odata": false
                     }
                 }), "view");
                 if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
@@ -27,7 +27,43 @@ sap.ui.define(
                                 this.getModel("tci").setProperty("/items", d.results);
                             }
                         })
+                        eventQueue.register("complete", () => {
+                            sap.m.MessageToast.show("success");
+                        })
+                        eventQueue.register("create-CheckInTypes", (data) => {
+                            return new Promise((resolve, reject) => {
+                                this.getModel().create("/CheckInTypes", data, {
+                                    success: () => {
+                                        resolve();
+                                    },
+                                    error: (err) => {
+                                        sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+                                        reject();
+                                    }
+                                });
+                            })
+                        });
+                        eventQueue.register("create-TypedCheckIns", (data) => {
+                            return new Promise((resolve, reject) => {
+                                this.getModel().create("/TypedCheckIns", data, {
+                                    success: () => {
+                                        resolve();
+                                    },
+                                    error: (err) => {
+                                        sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+                                        reject();
+                                    }
+                                });
+                            })
+                        });
                     })
+                } else {
+                    this._oStorage = new Storage(Storage.Type.local, "trec_all_data");
+                    const data = JSON.parse(this._oStorage.get("stored_data"));
+                    if (data) {
+                        this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
+                        this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
+                    }
                 }
             },
 
@@ -37,14 +73,7 @@ sap.ui.define(
                     "text": this.getModel("ckt").getProperty("/new/text")
                 };
                 if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
-                    this.getModel().create("/CheckInTypes", data, {
-                        success: () => {
-                            sap.m.MessageToast.show("success")
-                        },
-                        error: () => {
-                            sap.m.MessageToast.show("failed")
-                        }
-                    });
+                    eventQueue.emit({ event: "create-CheckInTypes", data: data });
                 }
                 this.getModel("ckt").getProperty("/types").push(data);
                 this.getModel("ckt").refresh();
@@ -57,17 +86,57 @@ sap.ui.define(
                     "timestamp": new Date()
                 }
                 if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
-                    this.getModel().create("/TypedCheckIns", data, {
-                        success: () => {
-                            sap.m.MessageToast.show("success")
-                        },
-                        error: () => {
-                            sap.m.MessageToast.show("failed")
-                        }
-                    });
+                    eventQueue.emit({ event: "create-TypedCheckIns", data: data });
                 }
                 this.getModel("tci").getProperty("/items").push(data);
                 this.getModel("tci").refresh();
+            },
+
+            onPushAllData: function () {
+                if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+                    const data = {
+                        name: "pushAllData", value: JSON.stringify({
+                            "CheckInTypes": this.getModel("ckt").getData().types,
+                            "TypedCheckIns": this.getModel("tci").getData().items
+                        })
+                    }
+                    this.getModel().create("/AllDatas", data, {
+                        success: () => {
+                            sap.m.MessageToast.show("success");
+                        },
+                        error: (err) => {
+                            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+                        }
+                    });
+                }
+            },
+
+            onPullAllData: function () {
+                if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+                    this.getModel().read("/AllDatas", {
+                        success: (d) => {
+                            const data = JSON.parse(d.results[0].value);
+                            this.getModel("ckt").setProperty("/types", data.CheckInTypes);
+                            this.getModel("tci").setProperty("/items", data.TypedCheckIns);
+                        },
+                        error: (err) => {
+                            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+                        }
+                    });
+                }
+            },
+
+            onStoreAllData: function () {
+                const data = JSON.stringify({
+                    "CheckInTypes": this.getModel("ckt").getData(),
+                    "TypedCheckIns": this.getModel("tci").getData()
+                });
+                this._oStorage.put("stored_data", data);
+            },
+
+            onClearAllData: function () {
+                this._oStorage.remove("stored_data");
+                sap.m.MessageToast.show("cleared");
             },
 
             onExportAllData: function () {
