@@ -17,3 +17,6 @@ End user can export/import all input data
 
 #### 2. NF02-Data-Persistency
 End user can persist records on broswer refresh on use remote odata
+
+#### 3. NF03-Performance-Of-Calling-oData
+End user need client priori to server way of the best performance of calling oData. e.g. When click 3 times button, only need 1 time prompt success instead of 3 times.
