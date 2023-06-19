@@ -32,7 +32,7 @@
                     </List>
                 </content>
             </Panel>
-            <Panel>
+            <Panel expandable="true" expanded="true">
                 <content>
                     <TextArea value="{view>/message}" width="100%" height="12rem">
                     </TextArea>
