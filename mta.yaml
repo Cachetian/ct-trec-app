@@ -1,7 +1,7 @@
 _schema-version: "3.1"
 ID: ct-trec-app
 version: 1.0.0
-description: "A simple CAP project."
+description: "time reocrd app"
 parameters:
   enable-parallel-deployments: true
 build-parameters:
@@ -23,7 +23,6 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: ct-trec-app-auth
-      - name: ct-trec-app-db
 
   - name: ct-trec-app
     type: approuter.nodejs
@@ -47,7 +46,7 @@ resources:
     parameters:
       service: xsuaa
       service-plan: application
-      path: ./xs-security.json
+      path: app/xs-security.json
       config:
         xsappname: ct-trec-app-${org}-${space}
         tenant-mode: dedicated
