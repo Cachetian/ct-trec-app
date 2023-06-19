@@ -8,5 +8,6 @@ entity CheckInTypes {
 entity TypedCheckIns {
   key ID        : Integer;
       value     : String;
+      comment   : String;
       timestamp : Timestamp;
 }

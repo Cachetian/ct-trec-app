@@ -1,9 +1,9 @@
 sap.ui.define(
-    ["./BaseController", "sap/ui/model/json/JSONModel", "../core/eventQueue"],
+    ["./BaseController", "sap/ui/model/json/JSONModel", "sap/ui/util/Storage", "../core/eventQueue"],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel, eventQueue) {
+    function (Controller, JSONModel, Storage, eventQueue) {
         "use strict";
 
         return Controller.extend("ct.trec.cttrecapp.controller.MainView", {
@@ -11,7 +11,7 @@ sap.ui.define(
                 this.setModel(new JSONModel({
                     "message": "",
                     "settings": {
-                        "use_remote_odata": true
+                        "use_remote_odata": false
                     }
                 }), "view");
                 if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
@@ -57,6 +57,13 @@ sap.ui.define(
                             })
                         });
                     })
+                } else {
+                    this._oStorage = new Storage(Storage.Type.local, "trec_all_data");
+                    const data = JSON.parse(this._oStorage.get("stored_data"));
+                    if (data) {
+                        this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
+                        this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
+                    }
                 }
             },
 
@@ -117,6 +124,19 @@ sap.ui.define(
                         }
                     });
                 }
+            },
+
+            onStoreAllData: function () {
+                const data = JSON.stringify({
+                    "CheckInTypes": this.getModel("ckt").getData(),
+                    "TypedCheckIns": this.getModel("tci").getData()
+                });
+                this._oStorage.put("stored_data", data);
+            },
+
+            onClearAllData: function () {
+                this._oStorage.remove("stored_data");
+                sap.m.MessageToast.show("cleared");
             },
 
             onExportAllData: function () {
