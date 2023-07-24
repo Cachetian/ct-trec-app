@@ -59,7 +59,7 @@ sap.ui.define(
                     })
                 } else {
                     this._oStorage = new Storage(Storage.Type.local, "trec_all_data");
-                    const data = JSON.parse(this._oStorage.get("stored_data"));
+                    const data = this._preProcessImport(JSON.parse(this._oStorage.get("stored_data")));
                     if (data) {
                         this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
                         this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
@@ -115,9 +115,13 @@ sap.ui.define(
                 if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
                     this.getModel().read("/AllDatas", {
                         success: (d) => {
-                            const data = JSON.parse(d.results[0].value);
-                            this.getModel("ckt").setProperty("/types", data.CheckInTypes);
-                            this.getModel("tci").setProperty("/items", data.TypedCheckIns);
+                            const { CheckInTypes, TypedCheckIns } = JSON.parse(d.results[0].value);
+                            const data = this._preProcessImport({
+                                CheckInTypes: { types: CheckInTypes },
+                                TypedCheckIns: { items: TypedCheckIns }
+                            });
+                            this.getModel("ckt").setData(data.CheckInTypes);
+                            this.getModel("tci").setData(data.TypedCheckIns);
                         },
                         error: (err) => {
                             sap.m.MessageToast.show(`failed with msg: ${err.message}`);
@@ -148,9 +152,19 @@ sap.ui.define(
             },
 
             onImportAllData: function () {
-                const data = JSON.parse(this.getModel("view").getProperty("/message"));
+                const data = this._preProcessImport(JSON.parse(this.getModel("view").getProperty("/message")));
                 this.getModel("ckt").setData(data.CheckInTypes);
                 this.getModel("tci").setData(data.TypedCheckIns);
+            },
+
+            _preProcessImport: function (data) {
+                if (data?.TypedCheckIns?.items) {
+                    data.TypedCheckIns.items.forEach(it => {
+                        it.timestamp = new Date(it.timestamp)
+                    });
+                }
+
+                return data;
             }
         });
     }
