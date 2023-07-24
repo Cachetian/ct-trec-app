@@ -26,7 +26,7 @@
             </Panel>
             <Panel>
                 <content>
-                    <Table items="{tci>/items}">
+                    <Table items="{tci>/items}" autoPopinMode="true">
                         <columns>
                             <Column width="12em">
                                 <Text text="做" />
