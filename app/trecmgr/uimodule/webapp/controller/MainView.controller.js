@@ -160,31 +160,26 @@ sap.ui.define(
             onCheckInItemPress: function (oEvent) {
                 const oBindingContext = oEvent.getSource().getBindingContext("tci");
                 if (!this._dialog) {
-                    const input =
-                        // input.setBindingContext(oBindingContext);
-                        // input.bindProperty("value", { path: "tci>comment" });
-                        this._dialog = new sap.m.Dialog({
-                            title: 'Comment {tci>ID}',
-                            content: [
-                                new sap.m.Input({
-                                    value: "{tci>comment}"
-                                })
-                            ],
-                            endButton: new sap.m.Button({
-                                text: "X",
-                                press: () => {
-                                    this._dialog.unbindElement();
-                                    this._dialog.close();
-                                }
+                    this._dialog = new sap.m.Dialog({
+                        title: 'Comment {tci>ID}',
+                        content: [
+                            new sap.m.Input({
+                                value: "{tci>comment}"
                             })
+                        ],
+                        endButton: new sap.m.Button({
+                            text: "X",
+                            press: () => {
+                                this._dialog.unbindElement();
+                                this._dialog.close();
+                            }
                         })
+                    })
                     this._dialog.addStyleClass("sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader");
                 }
                 const dialog = this._dialog;
-                dialog.setModel(oBindingContext.getModel(), "tci");
-                // dialog.setBindingContext(oBindingContext);
-                dialog.bindElement(oBindingContext.getPath());
-
+                dialog.setModel(this.getModel("tci"), "tci");
+                dialog.bindElement({ path: oBindingContext.getPath(), model: "tci" });
                 dialog.open();
             },
 
