@@ -26,31 +26,31 @@
             </Panel>
             <Panel>
                 <content>
-                    <Table items="{tci>/items}">
+                    <Table items="{tci>/items}" autoPopinMode="true">
                         <columns>
-                            <Column width="12em">
+                            <Column width="8rem">
                                 <Text text="做" />
                             </Column>
-                            <Column width="16em">
+                            <Column width="10rem" popinDisplay="WithoutHeader">
                                 <Text text="时间" />
-                            </Column>
-                            <Column hAlign="End">
-                                <Text text="备注" />
                             </Column>
                         </columns>
                         <items>
-                            <ColumnListItem vAlign="Middle">
+                            <ColumnListItem vAlign="Middle" type="Active" press="onCheckInItemPress">
                                 <cells>
-                                    <ObjectIdentifier title="{tci>value}" />
+                                    <ObjectIdentifier title="{tci>value}"
+                                        text="{
+                                        path:'tci>comment',
+                                        formatter : '.formatEmptyText'
+                                    }" />
                                     <DateTimePicker
                                         value="{
                                             path:'tci>timestamp',
                                             type:'sap.ui.model.type.DateTime',
                                             formatOptions: {
-                                                'style': 'medium'
+                                                'style': 'short'
                                             }
                                         }" />
-                                    <Input value="{tci>comment}"></Input>
                                 </cells>
                             </ColumnListItem>
                         </items>

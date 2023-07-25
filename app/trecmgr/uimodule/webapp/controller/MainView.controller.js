@@ -157,6 +157,32 @@ sap.ui.define(
                 this.getModel("tci").setData(data.TypedCheckIns);
             },
 
+            onCheckInItemPress: function (oEvent) {
+                const oBindingContext = oEvent.getSource().getBindingContext("tci");
+                if (!this._dialog) {
+                    this._dialog = new sap.m.Dialog({
+                        title: 'Comment {tci>ID}',
+                        content: [
+                            new sap.m.Input({
+                                value: "{tci>comment}"
+                            })
+                        ],
+                        endButton: new sap.m.Button({
+                            text: "X",
+                            press: () => {
+                                this._dialog.unbindElement();
+                                this._dialog.close();
+                            }
+                        })
+                    })
+                    this._dialog.addStyleClass("sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader");
+                }
+                const dialog = this._dialog;
+                dialog.setModel(this.getModel("tci"), "tci");
+                dialog.bindElement({ path: oBindingContext.getPath(), model: "tci" });
+                dialog.open();
+            },
+
             _preProcessImport: function (data) {
                 if (data?.TypedCheckIns?.items) {
                     data.TypedCheckIns.items.forEach(it => {
@@ -165,6 +191,10 @@ sap.ui.define(
                 }
 
                 return data;
+            },
+
+            formatEmptyText: function (sText) {
+                return sText ? sText : "-";
             }
         });
     }
