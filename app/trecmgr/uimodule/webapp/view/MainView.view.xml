@@ -36,7 +36,7 @@
                             </Column>
                         </columns>
                         <items>
-                            <ColumnListItem vAlign="Middle">
+                            <ColumnListItem vAlign="Middle" type="Active" press="onCheckInItemPress">
                                 <cells>
                                     <ObjectIdentifier title="{tci>value}"
                                         text="{
