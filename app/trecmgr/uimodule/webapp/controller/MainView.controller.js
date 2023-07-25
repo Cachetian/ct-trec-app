@@ -165,6 +165,10 @@ sap.ui.define(
                 }
 
                 return data;
+            },
+
+            formatEmptyText: function (sText) {
+                return sText ? sText : "-";
             }
         });
     }
