@@ -65,7 +65,7 @@
             </Panel>
         </content>
         <footer>
-            <OverflowToolbar>
+            <OverflowToolbar class="sapUiLargeMarginBottom">
                 <content>
                     <ToolbarSpacer></ToolbarSpacer>
                     <Button text="Push" press="onPushAllData"
