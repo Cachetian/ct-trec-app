@@ -26,7 +26,13 @@
             </Panel>
             <Panel>
                 <content>
-                    <Table items="{tci>/items}" autoPopinMode="true">
+                    <Table
+                        items="{ path: 'tci>/items',
+                            sorter: {
+                                path: 'timestamp',
+                                descending: true
+                            }}"
+                        autoPopinMode="true">
                         <columns>
                             <Column width="8rem">
                                 <Text text="做" />
