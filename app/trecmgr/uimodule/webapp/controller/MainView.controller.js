@@ -183,6 +183,22 @@ sap.ui.define(
                 dialog.open();
             },
 
+            onCopyMessage: function () {
+                this.byId("msgTextArea").getDomRef().firstChild.firstChild.select();
+                navigator.clipboard.writeText(this.getModel().getProperty("/message")).then(
+                    () => {
+                        sap.m.MessageToast.show(
+                            "copied"
+                        );
+                    },
+                    () => {
+                        sap.m.MessageToast.show(
+                            "copy failed"
+                        );
+                    }
+                );
+            },
+
             _preProcessImport: function (data) {
                 if (data?.TypedCheckIns?.items) {
                     data.TypedCheckIns.items.forEach(it => {
