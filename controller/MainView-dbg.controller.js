@@ -10,7 +10,6 @@ sap.ui.define(
             onInit: function () {
                 this.setModel(new JSONModel({
                     "message": "",
-                    "messageCount": 0,
                     "settings": {
                         "use_remote_odata": false
                     }
@@ -193,7 +192,7 @@ sap.ui.define(
                             new sap.m.TextArea({
                                 width: "100%",
                                 height: "100%",
-                                value: "{view>message}"
+                                text: "{view>message}"
                             })
                         ],
                         endButton: new sap.m.Button({
