@@ -57,10 +57,11 @@
                     </Table>
                 </content>
             </Panel>
-            <Panel expandable="true" expanded="true">
+            <Panel expandable="true" expanded="false">
                 <headerToolbar>
                     <OverflowToolbar>
                         <ToolbarSpacer></ToolbarSpacer>
+                        <Button text="Open" press="onOpenMessage"></Button>
                         <Button text="C" press="onCopyMessage"></Button>
                     </OverflowToolbar>
                 </headerToolbar>

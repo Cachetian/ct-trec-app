@@ -183,6 +183,34 @@ sap.ui.define(
                 dialog.open();
             },
 
+            onOpenMessage: function () {
+                if (!this._msgDialog) {
+                    this._msgDialog = new sap.m.Dialog({
+                        title: 'Message {view>messageCount}',
+                        stretch: true,
+                        content: [
+                            new sap.m.TextArea({
+                                width: "100%",
+                                height: "100%",
+                                text: "{view>message}"
+                            })
+                        ],
+                        endButton: new sap.m.Button({
+                            text: "X",
+                            press: () => {
+                                this._msgDialog.unbindElement();
+                                this._msgDialog.close();
+                            }
+                        })
+                    })
+                    this._msgDialog.addStyleClass("sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader");
+                }
+                const dialog = this._msgDialog;
+                dialog.setModel(this.getModel("view"), "view");
+                dialog.bindElement({ path: "/", model: "view" });
+                dialog.open();
+            },
+
             onCopyMessage: function () {
                 this.byId("msgTextArea").getDomRef().firstChild.firstChild.select();
                 navigator.clipboard.writeText(this.getModel().getProperty("/message")).then(
