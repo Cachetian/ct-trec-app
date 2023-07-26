@@ -10,7 +10,6 @@ sap.ui.define(
             onInit: function () {
                 this.setModel(new JSONModel({
                     "message": "",
-                    "messageCount": 0,
                     "settings": {
                         "use_remote_odata": false
                     }
@@ -66,6 +65,9 @@ sap.ui.define(
                         this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
                     }
                 }
+
+                // sap.m.MessageToast.show(JSON.stringify(this.getOwnerComponent().getModel("device").getProperty("/browser")));
+                // this.getModel("view").setProperty("/message", JSON.stringify(this.getOwnerComponent().getModel("device")));
             },
 
             onNewCheckInType: function () {
@@ -181,34 +183,6 @@ sap.ui.define(
                 const dialog = this._dialog;
                 dialog.setModel(this.getModel("tci"), "tci");
                 dialog.bindElement({ path: oBindingContext.getPath(), model: "tci" });
-                dialog.open();
-            },
-
-            onOpenMessage: function () {
-                if (!this._msgDialog) {
-                    this._msgDialog = new sap.m.Dialog({
-                        title: 'Message {view>messageCount}',
-                        stretch: true,
-                        content: [
-                            new sap.m.TextArea({
-                                width: "100%",
-                                height: "100%",
-                                value: "{view>message}"
-                            })
-                        ],
-                        endButton: new sap.m.Button({
-                            text: "X",
-                            press: () => {
-                                this._msgDialog.unbindElement();
-                                this._msgDialog.close();
-                            }
-                        })
-                    })
-                    this._msgDialog.addStyleClass("sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader");
-                }
-                const dialog = this._msgDialog;
-                dialog.setModel(this.getModel("view"), "view");
-                dialog.bindElement({ path: "/", model: "view" });
                 dialog.open();
             },
 

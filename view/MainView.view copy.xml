@@ -26,13 +26,7 @@
             </Panel>
             <Panel>
                 <content>
-                    <Table
-                        items="{ path: 'tci>/items',
-                            sorter: {
-                                path: 'timestamp',
-                                descending: true
-                            }}"
-                        autoPopinMode="true">
+                    <Table items="{tci>/items}" autoPopinMode="true">
                         <columns>
                             <Column width="8rem">
                                 <Text text="做" />
@@ -63,11 +57,11 @@
                     </Table>
                 </content>
             </Panel>
-            <Panel expandable="true" expanded="false">
+            <Panel expandable="true" expanded="true">
                 <headerToolbar>
                     <OverflowToolbar>
                         <ToolbarSpacer></ToolbarSpacer>
-                        <Button text="Open" press="onOpenMessage"></Button>
+                        <Button text="O" press=""></Button>
                         <Button text="C" press="onCopyMessage"></Button>
                     </OverflowToolbar>
                 </headerToolbar>
