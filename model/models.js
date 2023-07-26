@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/model/json/JSONModel","sap/ui/Device"],function(e,t){"use strict";return{createDeviceModel:function(){const n=new e(t);n.setDefaultBindingMode("OneWay");return n},createCheckTypesModel:function(){const t=new e({new:{text:""},types:[{text:"Do"}]});t.setDefaultBindingMode("TwoWay");return t},createTypedCheckInModel:function(){const t=new e({items:[{value:"Do",timestamp:new Date}]});t.setDefaultBindingMode("TwoWay");return t}}});
+//# sourceMappingURL=models.js.map

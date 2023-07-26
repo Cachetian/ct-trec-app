@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/mvc/Controller"],function(t){"use strict";return t.extend("ct.trec.cttrecapp.controller.App",{onInit(){this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass())}})});
+//# sourceMappingURL=App.controller.js.map

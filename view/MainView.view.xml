@@ -1,0 +1,83 @@
+<mvc:View controllerName="ct.trec.cttrecapp.controller.MainView" xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true" xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+        <headerContent>
+            <OverflowToolbar>
+                <ToolbarSpacer></ToolbarSpacer>
+                <Switch state="{view>/settings/use_remote_odata}"></Switch>
+            </OverflowToolbar>
+        </headerContent>
+        <content>
+            <Panel>
+                <content>
+                    <Label text="打卡类型："></Label>
+                    <Input value="{ckt>/new/text}"></Input>
+                    <Button text="添加" press="onNewCheckInType"></Button>
+                </content>
+            </Panel>
+            <Panel>
+                <content>
+                    <OverflowToolbar content="{ckt>/types}">
+                        <content>
+                            <Button text="{ckt>text}" press="onTypedCheckIn"></Button>
+                        </content>
+                    </OverflowToolbar>
+                </content>
+            </Panel>
+            <Panel>
+                <content>
+                    <Table items="{tci>/items}" autoPopinMode="true">
+                        <columns>
+                            <Column width="8rem">
+                                <Text text="做" />
+                            </Column>
+                            <Column width="10rem" popinDisplay="WithoutHeader">
+                                <Text text="时间" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem vAlign="Middle" type="Active" press="onCheckInItemPress">
+                                <cells>
+                                    <ObjectIdentifier title="{tci>value}"
+                                        text="{
+                                        path:'tci>comment',
+                                        formatter : '.formatEmptyText'
+                                    }" />
+                                    <DateTimePicker
+                                        value="{
+                                            path:'tci>timestamp',
+                                            type:'sap.ui.model.type.DateTime',
+                                            formatOptions: {
+                                                'style': 'short'
+                                            }
+                                        }" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </content>
+            </Panel>
+            <Panel expandable="true" expanded="true">
+                <content>
+                    <TextArea value="{view>/message}" width="100%" height="12rem">
+                    </TextArea>
+                </content>
+            </Panel>
+        </content>
+        <footer>
+            <OverflowToolbar class="sapUiLargeMarginBottom">
+                <content>
+                    <ToolbarSpacer></ToolbarSpacer>
+                    <Button text="Push" press="onPushAllData"
+                        enabled="{view>/settings/use_remote_odata}"></Button>
+                    <Button text="Pull" press="onPullAllData"
+                        enabled="{view>/settings/use_remote_odata}"></Button>
+                    <Button text="Store" press="onStoreAllData"></Button>
+                    <Button text="Clear" press="onClearAllData"></Button>
+                    <Button text="Export" press="onExportAllData"></Button>
+                    <Button text="Import" press="onImportAllData"></Button>
+                </content>
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>
