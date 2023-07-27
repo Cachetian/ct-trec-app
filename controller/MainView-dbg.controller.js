@@ -10,6 +10,10 @@ sap.ui.define(
             onInit: function () {
                 this.setModel(new JSONModel({
                     "message": "",
+                    "messageCount": 0,
+                    "ui": {
+                        "cmdPanelExpanded": false
+                    },
                     "settings": {
                         "use_remote_odata": false
                     }
@@ -76,6 +80,7 @@ sap.ui.define(
                     eventQueue.emit({ event: "create-CheckInTypes", data: data });
                 }
                 this.getModel("ckt").getProperty("/types").push(data);
+                this.getModel("ckt").setProperty("/new/text", "");
                 this.getModel("ckt").refresh();
             },
 
@@ -192,7 +197,8 @@ sap.ui.define(
                             new sap.m.TextArea({
                                 width: "100%",
                                 height: "100%",
-                                text: "{view>message}"
+                                rows: 16,
+                                value: "{view>message}"
                             })
                         ],
                         endButton: new sap.m.Button({
