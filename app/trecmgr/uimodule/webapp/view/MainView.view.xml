@@ -8,20 +8,37 @@
             </OverflowToolbar>
         </headerContent>
         <content>
-            <Panel>
-                <content>
-                    <Label text="打卡类型："></Label>
-                    <Input value="{ckt>/new/text}"></Input>
-                    <Button text="添加" press="onNewCheckInType"></Button>
-                </content>
-            </Panel>
-            <Panel>
-                <content>
-                    <OverflowToolbar content="{ckt>/types}">
-                        <content>
-                            <Button text="{ckt>text}" press="onTypedCheckIn"></Button>
-                        </content>
+            <Toolbar>
+                <Label text="打卡类型" showColon="true" labelFor="checkInTypeInput" width="4rem"></Label>
+                <Input id="checkInTypeInput" value="{ckt>/new/text}" width="12rem"></Input>
+                <Button text="添加" press="onNewCheckInType" type="Transparent"></Button>
+            </Toolbar>
+            <OverflowToolbar content="{ckt>/types}">
+                <Button text="{ckt>text}" press="onTypedCheckIn"></Button>
+            </OverflowToolbar>
+            <Panel id="cmdPanel" expandable="true" expanded="{view>/ui/cmdPanelExpanded}">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <ToolbarSpacer />
+                        <Button text="Open" press="onOpenMessage"
+                            visible="{= !${view>/ui/cmdPanelExpanded}}"></Button>
                     </OverflowToolbar>
+                </headerToolbar>
+                <content>
+                    <OverflowToolbar>
+                        <ToolbarSpacer />
+                        <Button text="Copy" press="onCopyMessage"></Button>
+                        <Button text="Push" press="onPushAllData"
+                            enabled="{view>/settings/use_remote_odata}"></Button>
+                        <Button text="Pull" press="onPullAllData"
+                            enabled="{view>/settings/use_remote_odata}"></Button>
+                        <Button text="Store" press="onStoreAllData"></Button>
+                        <Button text="Clear" press="onClearAllData"></Button>
+                        <Button text="Export" press="onExportAllData"></Button>
+                        <Button text="Import" press="onImportAllData"></Button>
+                    </OverflowToolbar>
+                    <TextArea id="msgTextArea" value="{view>/message}" width="100%" height="12rem">
+                    </TextArea>
                 </content>
             </Panel>
             <Panel>
@@ -63,34 +80,9 @@
                     </Table>
                 </content>
             </Panel>
-            <Panel expandable="true" expanded="false">
-                <headerToolbar>
-                    <OverflowToolbar>
-                        <ToolbarSpacer></ToolbarSpacer>
-                        <Button text="Open" press="onOpenMessage"></Button>
-                        <Button text="C" press="onCopyMessage"></Button>
-                    </OverflowToolbar>
-                </headerToolbar>
-                <content>
-                    <TextArea id="msgTextArea" value="{view>/message}" width="100%" height="12rem">
-                    </TextArea>
-                </content>
-            </Panel>
         </content>
         <footer>
-            <OverflowToolbar class="sapUiLargeMarginBottom">
-                <content>
-                    <ToolbarSpacer></ToolbarSpacer>
-                    <Button text="Push" press="onPushAllData"
-                        enabled="{view>/settings/use_remote_odata}"></Button>
-                    <Button text="Pull" press="onPullAllData"
-                        enabled="{view>/settings/use_remote_odata}"></Button>
-                    <Button text="Store" press="onStoreAllData"></Button>
-                    <Button text="Clear" press="onClearAllData"></Button>
-                    <Button text="Export" press="onExportAllData"></Button>
-                    <Button text="Import" press="onImportAllData"></Button>
-                </content>
-            </OverflowToolbar>
+            <Bar></Bar>
         </footer>
     </Page>
 </mvc:View>
