@@ -1,83 +1,112 @@
-<mvc:View controllerName="ct.trec.cttrecapp.controller.MainView" xmlns:mvc="sap.ui.core.mvc"
+<mvc:View controllerName="ct.trec.trecmgr.controller.MainView" xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true" xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
+    <Page id="page" title="{i18n>title} ({view>/itemsCount})">
         <headerContent>
             <OverflowToolbar>
                 <ToolbarSpacer></ToolbarSpacer>
                 <Switch state="{view>/settings/use_remote_odata}"></Switch>
             </OverflowToolbar>
         </headerContent>
-        <content>
-            <Panel>
-                <content>
-                    <Label text="打卡类型："></Label>
-                    <Input value="{ckt>/new/text}"></Input>
-                    <Button text="添加" press="onNewCheckInType"></Button>
-                </content>
-            </Panel>
-            <Panel>
-                <content>
-                    <OverflowToolbar content="{ckt>/types}">
-                        <content>
-                            <Button text="{ckt>text}" press="onTypedCheckIn"></Button>
-                        </content>
-                    </OverflowToolbar>
-                </content>
-            </Panel>
-            <Panel>
-                <content>
-                    <Table items="{tci>/items}" autoPopinMode="true">
-                        <columns>
-                            <Column width="8rem">
-                                <Text text="做" />
-                            </Column>
-                            <Column width="10rem" popinDisplay="WithoutHeader">
-                                <Text text="时间" />
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem vAlign="Middle" type="Active" press="onCheckInItemPress">
-                                <cells>
-                                    <ObjectIdentifier title="{tci>value}"
-                                        text="{
+        <Panel expandable="true" expanded="{view>/ui/cmdPanelExpanded}">
+            <headerToolbar>
+                <OverflowToolbar>
+                    <HBox alignItems="Center" visible="{= !${view>/ui/cmdPanelExpanded}}">
+                        <Label text="打卡" showColon="true" labelFor="checkInTypeInput"
+                            width="2rem" class="sapUiTinyMarginEnd" />
+                        <Input value="{ckt>/new/text}" width="8rem" />
+                        <Button icon="sap-icon://add" press="onNewCheckInType" type="Transparent" />
+                        <Button icon="sap-icon://edit" press="onEditCheckInTypes" type="Transparent"
+                            visible="{=!${view>/ui/checkInTypesEditable}}" />
+                        <Button icon="sap-icon://save" press="onEditCheckInTypes" type="Transparent"
+                            visible="{view>/ui/checkInTypesEditable}" />
+                    </HBox>
+                    <ToolbarSpacer />
+                    <Button icon="sap-icon://database" press="onStoreAllData" />
+                    <Button icon="sap-icon://full-screen" press="onOpenMessage"
+                        visible="{= !${view>/ui/cmdPanelExpanded}}" />
+                    <HBox visible="{view>/ui/cmdPanelExpanded}">
+                        <Button icon="sap-icon://copy" press="onCopyMessage" />
+                        <Button text="Export" press="onExportAllData" />
+                        <Button text="Import" press="onImportAllData" />
+                        <Button icon="sap-icon://clear-all" press="onClearAllData" />
+                        <Button text="Push" press="onPushAllData"
+                            enabled="{view>/settings/use_remote_odata}" />
+                        <Button text="Pull" press="onPullAllData"
+                            enabled="{view>/settings/use_remote_odata}" />
+                    </HBox>
+                </OverflowToolbar>
+            </headerToolbar>
+            <content>
+                <TextArea id="msgTextArea" value="{view>/message}" width="100%" height="12rem">
+                </TextArea>
+            </content>
+        </Panel>
+        <HBox alignItems="Center" visible="{view>/ui/cmdPanelExpanded}">
+            <Label text="打卡类型" showColon="true" labelFor="checkInTypeInput"
+                width="4rem" class="sapUiSmallMarginBegin sapUiTinyMarginEnd" />
+            <Input value="{ckt>/new/text}" width="8rem" />
+            <Button icon="sap-icon://add" press="onNewCheckInType" type="Transparent" />
+            <Button icon="sap-icon://edit" press="onEditCheckInTypes" type="Transparent"
+                visible="{=!${view>/ui/checkInTypesEditable}}" />
+            <Button icon="sap-icon://save" press="onEditCheckInTypes" type="Transparent"
+                visible="{view>/ui/checkInTypesEditable}" />
+        </HBox>
+        <List id="typesList" items="{ckt>/types}" visible="{view>/ui/checkInTypesEditable}"
+            mode="Delete"
+            headerText="({view>/typesCount})"
+            delete="onDeleteCheckInType"
+            updateFinished=".onTypesUpdateFinished">
+            <StandardListItem title="{ckt>text}" type="Detail"
+                detailPress="onUpdateCheckInType" />
+        </List>
+        <VBox visible="{=!${view>/ui/checkInTypesEditable}}">
+            <FlexBox items="{ckt>/types}" wrap="Wrap">
+                <Button text="{ckt>text}" press="onTypedCheckIn"
+                    class="sapUiSmallMarginBegin" />
+            </FlexBox>
+            <Table id="itemsList"
+                autoPopinMode="true" mode="Delete" delete="onDeleteCheckInItem"
+                updateFinished=".onItemsUpdateFinished"
+                items="{ 
+                        path: 'tci>/items',
+                        sorter: {
+                            path: 'timestamp',
+                            descending: true
+                        }
+                    }">
+                <columns>
+                    <Column width="8rem">
+                        <Text text="动作" />
+                    </Column>
+                    <Column width="12rem" popinDisplay="WithoutHeader">
+                        <Text text="时间" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem vAlign="Middle" type="Inactive">
+                        <cells>
+                            <ObjectIdentifier title="{tci>value}"
+                                titleActive="true"
+                                titlePress="onCheckInItemPress"
+                                text="{
                                         path:'tci>comment',
                                         formatter : '.formatEmptyText'
                                     }" />
-                                    <DateTimePicker
-                                        value="{
-                                            path:'tci>timestamp',
-                                            type:'sap.ui.model.type.DateTime',
-                                            formatOptions: {
-                                                'style': 'short'
-                                            }
-                                        }" />
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </content>
-            </Panel>
-            <Panel expandable="true" expanded="true">
-                <content>
-                    <TextArea value="{view>/message}" width="100%" height="12rem">
-                    </TextArea>
-                </content>
-            </Panel>
-        </content>
+                            <DateTimePicker
+                                value="{
+                                        path:'tci>timestamp',
+                                        type:'sap.ui.model.type.DateTime',
+                                        formatOptions: {
+                                            'style': 'short'
+                                        }
+                                    }" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </VBox>
         <footer>
-            <OverflowToolbar>
-                <content>
-                    <ToolbarSpacer></ToolbarSpacer>
-                    <Button text="Push" press="onPushAllData"
-                        enabled="{view>/settings/use_remote_odata}"></Button>
-                    <Button text="Pull" press="onPullAllData"
-                        enabled="{view>/settings/use_remote_odata}"></Button>
-                    <Button text="Store" press="onStoreAllData"></Button>
-                    <Button text="Clear" press="onClearAllData"></Button>
-                    <Button text="Export" press="onExportAllData"></Button>
-                    <Button text="Import" press="onImportAllData"></Button>
-                </content>
-            </OverflowToolbar>
+            <Bar></Bar>
         </footer>
     </Page>
 </mvc:View>

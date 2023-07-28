@@ -1,6 +1,6 @@
 specVersion: "3.0"
 metadata:
-  name: cttrecapp_uimodule
+  name: trecmgr_uimodule
 type: application
 resources:
   configuration:
