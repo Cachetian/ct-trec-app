@@ -191,8 +191,20 @@ sap.ui.define(
             onOpenMessage: function () {
                 if (!this._msgDialog) {
                     this._msgDialog = new sap.m.Dialog({
-                        title: 'Message {view>messageCount}',
                         stretch: true,
+                        customHeader: new sap.m.Toolbar({
+                            content: [
+                                new sap.m.Title({ text: 'Message {view>messageCount}' }),
+                                new sap.m.ToolbarSpacer(),
+                                new sap.m.Button({
+                                    text: "Import",
+                                    press: () => {
+                                        this.onImportAllData();
+                                        this._msgDialog.close();
+                                    }
+                                })
+                            ]
+                        }),
                         content: [
                             new sap.m.TextArea({
                                 width: "100%",
@@ -202,12 +214,14 @@ sap.ui.define(
                             })
                         ],
                         endButton: new sap.m.Button({
-                            text: "X",
+                            icon: "sap-icon://decline",
                             press: () => {
-                                this._msgDialog.unbindElement();
                                 this._msgDialog.close();
                             }
-                        })
+                        }),
+                        afterClose: () => {
+                            this._msgDialog.unbindElement();
+                        }
                     })
                     this._msgDialog.addStyleClass("sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader");
                 }
