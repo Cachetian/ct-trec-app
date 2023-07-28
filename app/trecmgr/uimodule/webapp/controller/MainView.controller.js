@@ -11,6 +11,8 @@ sap.ui.define(
                 this.setModel(new JSONModel({
                     "message": "",
                     "messageCount": 0,
+                    "typesCount": 0,
+                    "itemsCount": 0,
                     "ui": {
                         "cmdPanelExpanded": false,
                         "checkInTypesEditable": false,
@@ -205,6 +207,16 @@ sap.ui.define(
                 this.getModel("tci").setData(data.TypedCheckIns);
             },
 
+            onTypesUpdateFinished: function (oEvent) {
+                // update the master list object counter after new data is loaded
+                this._updateTypesCount(oEvent.getParameter("total"));
+            },
+
+            onItemsUpdateFinished: function (oEvent) {
+                // update the master list object counter after new data is loaded
+                this._updateItemsCount(oEvent.getParameter("total"));
+            },
+
             onCheckInItemPress: function (oEvent) {
                 const oBindingContext = oEvent.getSource().getBindingContext("tci");
                 if (!this._dialog) {
@@ -301,6 +313,20 @@ sap.ui.define(
                 );
             },
 
+            _updateTypesCount: function (iTotalItems) {
+                // only update the counter if the length is final
+                if (this.byId("typesList").getBinding("items").isLengthFinal()) {
+                    this.getModel("view").setProperty("/typesCount", iTotalItems);
+                }
+            },
+
+            _updateItemsCount: function (iTotalItems) {
+                // only update the counter if the length is final
+                if (this.byId("itemsList").getBinding("items").isLengthFinal()) {
+                    this.getModel("view").setProperty("/itemsCount", iTotalItems);
+                }
+            },
+
             _preProcessImport: function (data) {
                 if (data?.TypedCheckIns?.items) {
                     data.TypedCheckIns.items.forEach(it => {
@@ -309,6 +335,10 @@ sap.ui.define(
                 }
 
                 return data;
+            },
+
+            formatListCount: function (array) {
+                return array?.length;
             },
 
             formatEmptyText: function (sText) {
