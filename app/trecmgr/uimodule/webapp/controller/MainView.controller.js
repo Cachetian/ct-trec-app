@@ -6,7 +6,7 @@ sap.ui.define(
     function (Controller, JSONModel, Storage, eventQueue) {
         "use strict";
 
-        return Controller.extend("ct.trec.cttrecapp.controller.MainView", {
+        return Controller.extend("ct.trec.trecmgr.controller.MainView", {
             onInit: function () {
                 this.setModel(new JSONModel({
                     "message": "",
