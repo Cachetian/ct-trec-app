@@ -1,7 +1,7 @@
-sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/core/routing/History", "sap/ui/core/UIComponent", "ct/trec/cttrecapp/model/formatter"], function (Controller, History, UIComponent, formatter) {
+sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/core/routing/History", "sap/ui/core/UIComponent", "ct/trec/trecmgr/model/formatter"], function (Controller, History, UIComponent, formatter) {
     "use strict";
 
-    return Controller.extend("ct.trec.cttrecapp.controller.BaseController", {
+    return Controller.extend("ct.trec.trecmgr.controller.BaseController", {
         formatter: formatter,
 
         /**

@@ -3,7 +3,7 @@ sap.ui.require(["sap/ui/test/Opa5", "sap/ui/test/actions/Press"], function (Opa5
 
     Opa5.createPageObjects({
         onTheMainPage: {
-            viewName: "ct.trec.cttrecapp.view.MainView",
+            viewName: "ct.trec.trecmgr.view.MainView",
 
             actions: {
                 // add action functions here
@@ -22,12 +22,12 @@ sap.ui.require(["sap/ui/test/Opa5", "sap/ui/test/actions/Press"], function (Opa5
                     return this.waitFor({
                         controlType: "sap.m.Title",
                         properties: {
-                            text: "Title of ct.trec.cttrecapp",
+                            text: "Title of ct.trec.trecmgr",
                         },
                         success: function () {
                             Opa5.assert.ok(true, "The page shows the correct title");
                         },
-                        errorMessage: "App does not show the expected title ct.trec.cttrecapp",
+                        errorMessage: "App does not show the expected title ct.trec.trecmgr",
                     });
                 },
             },

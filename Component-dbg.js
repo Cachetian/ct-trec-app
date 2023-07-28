@@ -2,10 +2,10 @@
  * eslint-disable @sap/ui5-jsdocs/no-jsdoc
  */
 
-sap.ui.define(["sap/ui/core/UIComponent", "sap/ui/Device", "ct/trec/cttrecapp/model/models"], function (UIComponent, Device, models) {
+sap.ui.define(["sap/ui/core/UIComponent", "sap/ui/Device", "ct/trec/trecmgr/model/models"], function (UIComponent, Device, models) {
     "use strict";
 
-    return UIComponent.extend("ct.trec.cttrecapp.Component", {
+    return UIComponent.extend("ct.trec.trecmgr.Component", {
         metadata: {
             manifest: "json",
         },
