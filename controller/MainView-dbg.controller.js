@@ -313,6 +313,17 @@ sap.ui.define(
                 );
             },
 
+            getItemsByDateGroup: function (oContext) {
+                return oContext.getProperty('timestamp')?.toLocaleDateString();
+            },
+
+            getItemsGroupByDateHeader: function (oGroup) {
+                return new sap.m.GroupHeaderListItem({
+                    title: oGroup.key,
+                    upperCase: false
+                });
+            },
+
             _updateTypesCount: function (iTotalItems) {
                 // only update the counter if the length is final
                 if (this.byId("typesList").getBinding("items").isLengthFinal()) {

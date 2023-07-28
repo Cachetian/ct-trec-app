@@ -71,8 +71,10 @@
                         path: 'tci>/items',
                         sorter: {
                             path: 'timestamp',
-                            descending: true
-                        }
+                            descending: true,
+                            group: '.getItemsByDateGroup'
+                        },
+                        groupHeaderFactory: '.getItemsGroupByDateHeader'
                     }">
                 <columns>
                     <Column width="8rem">
