@@ -197,6 +197,18 @@ sap.ui.define(
                                 new sap.m.Title({ text: 'Message {view>messageCount}' }),
                                 new sap.m.ToolbarSpacer(),
                                 new sap.m.Button({
+                                    icon: "sap-icon://save",
+                                    press: () => {
+                                        this.onStoreAllData();
+                                    }
+                                }),
+                                new sap.m.Button({
+                                    text: "Export",
+                                    press: () => {
+                                        this.onExportAllData();
+                                    }
+                                }),
+                                new sap.m.Button({
                                     text: "Import",
                                     press: () => {
                                         this.onImportAllData();

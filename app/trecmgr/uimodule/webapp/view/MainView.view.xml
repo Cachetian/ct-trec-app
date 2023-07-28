@@ -11,13 +11,15 @@
             <Panel id="cmdPanel" expandable="true" expanded="{view>/ui/cmdPanelExpanded}">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Label text="打卡" showColon="true" labelFor="checkInTypeInput" width="2rem" />
-                        <Input id="checkInTypeInput" value="{ckt>/new/text}" width="8rem" />
-                        <Button icon="sap-icon://add" press="onNewCheckInType" />
-                        <Button icon="sap-icon://save" press="onStoreAllData"
-                            visible="{= !${view>/ui/cmdPanelExpanded}}" />
-                        <Button icon="sap-icon://full-screen" press="onOpenMessage"
-                            visible="{= !${view>/ui/cmdPanelExpanded}}" />
+                        <ToolbarSpacer />
+                        <HBox visible="{= !${view>/ui/cmdPanelExpanded}}" alignItems="Center">
+                            <Label text="打卡" showColon="true" labelFor="checkInTypeInput"
+                                width="2rem" class="sapUiTinyMarginEnd" />
+                            <Input id="checkInTypeInput" value="{ckt>/new/text}" width="8rem" />
+                            <Button icon="sap-icon://add" press="onNewCheckInType" />
+                            <Button icon="sap-icon://save" press="onStoreAllData" />
+                            <Button icon="sap-icon://full-screen" press="onOpenMessage" />
+                        </HBox>
                     </OverflowToolbar>
                 </headerToolbar>
                 <content>
@@ -37,7 +39,7 @@
                     </TextArea>
                 </content>
             </Panel>
-            <FlexBox items="{ckt>/types}" wrap="Wrap">
+            <FlexBox items="{ckt>/types}" wrap="Wrap" visible="{= !${view>/ui/cmdPanelExpanded}}">
                 <Button text="{ckt>text}" press="onTypedCheckIn" class="sapUiSmallMarginBegin" />
             </FlexBox>
             <Panel>
