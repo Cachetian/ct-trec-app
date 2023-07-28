@@ -10,6 +10,16 @@
         <Panel expandable="true" expanded="{view>/ui/cmdPanelExpanded}">
             <headerToolbar>
                 <OverflowToolbar>
+                    <HBox alignItems="Center" visible="{= !${view>/ui/cmdPanelExpanded}}">
+                        <Label text="打卡" showColon="true" labelFor="checkInTypeInput"
+                            width="2rem" class="sapUiTinyMarginEnd" />
+                        <Input value="{ckt>/new/text}" width="8rem" />
+                        <Button icon="sap-icon://add" press="onNewCheckInType" type="Transparent" />
+                        <Button icon="sap-icon://edit" press="onEditCheckInTypes" type="Transparent"
+                            visible="{=!${view>/ui/checkInTypesEditable}}" />
+                        <Button icon="sap-icon://save" press="onEditCheckInTypes" type="Transparent"
+                            visible="{view>/ui/checkInTypesEditable}" />
+                    </HBox>
                     <ToolbarSpacer />
                     <Button icon="sap-icon://database" press="onStoreAllData" />
                     <Button icon="sap-icon://full-screen" press="onOpenMessage"
@@ -31,9 +41,9 @@
                 </TextArea>
             </content>
         </Panel>
-        <HBox alignItems="Center">
+        <HBox alignItems="Center" visible="{view>/ui/cmdPanelExpanded}">
             <Label text="打卡类型" showColon="true" labelFor="checkInTypeInput"
-                width="4rem" class="sapUiTinyMarginBeginEnd" />
+                width="4rem" class="sapUiSmallMarginBegin sapUiTinyMarginEnd" />
             <Input value="{ckt>/new/text}" width="8rem" />
             <Button icon="sap-icon://add" press="onNewCheckInType" type="Transparent" />
             <Button icon="sap-icon://edit" press="onEditCheckInTypes" type="Transparent"
