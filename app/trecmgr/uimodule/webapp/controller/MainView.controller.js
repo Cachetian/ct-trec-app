@@ -233,6 +233,14 @@ sap.ui.define(
                 this.getModel("view").setProperty("/ui/checkInItemsEditable", !this.getModel("view").getProperty("/ui/checkInItemsEditable"));
             },
 
+            onDeleteCheckInItem: function (oEvent) {
+                const array = this.getModel("tci").getProperty("/items");
+                const item = oEvent.getParameter("listItem").getBindingContext("tci").getObject();
+                const index = array.indexOf(item);
+                array.splice(index, 1);
+                this.getModel("tci").setProperty("/items", array);
+            },
+
             onOpenMessage: function () {
                 if (!this._msgDialog) {
                     this._msgDialog = new sap.m.Dialog({

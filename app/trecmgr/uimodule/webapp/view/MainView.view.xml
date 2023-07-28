@@ -53,36 +53,26 @@
                             class="sapUiSmallMarginBegin" />
                     </FlexBox>
                     <Table
+                        autoPopinMode="true" mode="Delete" delete="onDeleteCheckInItem"
                         items="{ path: 'tci>/items',
                             sorter: {
                                 path: 'timestamp',
                                 descending: true
-                            }}"
-                        autoPopinMode="true" mode="Delete">
-                        <headerToolbar>
-                            <Toolbar>
-                                <ToolbarSpacer />
-                                <Button icon="sap-icon://edit" press="onEditCheckInItems"
-                                    type="Transparent"
-                                    visible="{=!${view>/ui/checkInItemsEditable}}" />
-                                <Button icon="sap-icon://save" press="onEditCheckInItems"
-                                    type="Transparent"
-                                    visible="{view>/ui/checkInItemsEditable}" />
-                            </Toolbar>
-                        </headerToolbar>
+                            }}">
                         <columns>
-                            <Column width="8rem">
+                            <Column width="5rem">
                                 <Text text="动作" />
                             </Column>
-                            <Column width="10rem" popinDisplay="WithoutHeader">
+                            <Column width="11rem" popinDisplay="WithoutHeader">
                                 <Text text="时间" />
                             </Column>
                         </columns>
                         <items>
-                            <ColumnListItem vAlign="Middle" type="Detail"
-                                detailPress="onCheckInItemPress">
+                            <ColumnListItem vAlign="Middle" type="Inactive">
                                 <cells>
                                     <ObjectIdentifier title="{tci>value}"
+                                        titleActive="true"
+                                        titlePress="onCheckInItemPress"
                                         text="{
                                         path:'tci>comment',
                                         formatter : '.formatEmptyText'
