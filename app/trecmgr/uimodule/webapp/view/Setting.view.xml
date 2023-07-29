@@ -1,16 +1,17 @@
 <mvc:View
-    controllerName="ct.trec.trecmgr.controller.MainView"
+    controllerName="ct.trec.trecmgr.controller.Setting"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
     xmlns="sap.m"
 >
-    <Page
-        id="page"
-        title="{i18n>title} ({view>/itemsCount})"
-    >
+    <Page title="{i18n>title}">
         <headerContent>
             <OverflowToolbar>
                 <ToolbarSpacer />
+                <Button
+                    icon="sap-icon://home"
+                    press="onHomePress"
+                />
                 <Switch state="{view>/settings/use_remote_odata}" />
             </OverflowToolbar>
         </headerContent>
@@ -25,14 +26,15 @@
                         visible="{= !${view>/ui/cmdPanelExpanded}}"
                     >
                         <Label
-                            text=""
+                            text="打卡"
+                            showColon="true"
                             labelFor="checkInTypeInput"
+                            width="2rem"
                             class="sapUiTinyMarginEnd"
                         />
                         <Input
                             value="{ckt>/new/text}"
                             width="8rem"
-                            placeholder="打卡类型"
                         />
                         <Button
                             icon="sap-icon://add"
@@ -149,73 +151,8 @@
                 detailPress="onUpdateCheckInType"
             />
         </List>
-        <VBox visible="{=!${view>/ui/checkInTypesEditable}}">
-            <FlexBox
-                items="{ckt>/types}"
-                wrap="Wrap"
-            >
-                <Button
-                    text="{ckt>text}"
-                    press="onTypedCheckIn"
-                    class="sapUiSmallMarginBegin"
-                />
-            </FlexBox>
-            <Table
-                id="itemsList"
-                autoPopinMode="true"
-                mode="Delete"
-                delete="onDeleteCheckInItem"
-                updateFinished=".onItemsUpdateFinished"
-                items="{ 
-                        path: 'tci>/items',
-                        sorter: {
-                            path: 'timestamp',
-                            descending: true,
-                            group: '.getItemsByDateGroup'
-                        },
-                        groupHeaderFactory: '.getItemsGroupByDateHeader'
-                    }"
-            >
-                <columns>
-                    <Column width="8rem">
-                        <Text text="动作" />
-                    </Column>
-                    <Column
-                        width="12rem"
-                        popinDisplay="WithoutHeader"
-                    >
-                        <Text text="时间" />
-                    </Column>
-                </columns>
-                <items>
-                    <ColumnListItem
-                        vAlign="Middle"
-                        type="Inactive"
-                    >
-                        <cells>
-                            <ObjectIdentifier
-                                title="{tci>value}"
-                                titleActive="true"
-                                titlePress="onCheckInItemPress"
-                                text="{
-                                        path:'tci>comment',
-                                        formatter : '.formatEmptyText'
-                                    }"
-                            />
-                            <DateTimePicker
-                                value="{
-                                        path:'tci>timestamp',
-                                        type:'sap.ui.model.type.DateTime',
-                                        formatOptions: {
-                                            'style': 'short'
-                                        }
-                                    }"
-                            />
-                        </cells>
-                    </ColumnListItem>
-                </items>
-            </Table>
-        </VBox>
+
+        <VBox visible="{=!${view>/ui/checkInTypesEditable}}" />
         <footer>
             <Bar />
         </footer>

@@ -1,0 +1,97 @@
+<mvc:View
+    controllerName="ct.trec.trecmgr.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+>
+    <Page title="{i18n>title}">
+        <headerContent>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+                <Button
+                    icon="sap-icon://show"
+                    press="onRecordPress"
+                    visible="{= !${view>/ui/cmdPanelExpanded}}"
+                />
+                <Button
+                    icon="sap-icon://action-settings"
+                    press="onSettingPress"
+                    visible="{= !${view>/ui/cmdPanelExpanded}}"
+                />
+            </OverflowToolbar>
+        </headerContent>
+        <VBox visible="{=!${view>/ui/checkInTypesEditable}}">
+            <Table
+                id="itemsList"
+                autoPopinMode="true"
+                mode="Delete"
+                delete="onDeleteCheckInItem"
+                updateFinished=".onItemsUpdateFinished"
+                growing="true"
+                growingThreshold="20"
+                items="{ 
+                        path: 'tci>/items',
+                        sorter: {
+                            path: 'timestamp',
+                            descending: true,
+                            group: '.getItemsByDateGroup'
+                        },
+                        groupHeaderFactory: '.getItemsGroupByDateHeader'
+                    }"
+            >
+                <headerToolbar>
+                    <OverflowToolbar
+                        content="{ckt>/types}"
+                        modelContextChange="onTypesModelCtxChange"
+                    >
+                        <Button
+                            text="{ckt>text}"
+                            press="onTypedCheckIn"
+                        />
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column width="8rem">
+                        <Text text="动作" />
+                    </Column>
+                    <Column
+                        width="4rem"
+                        popinDisplay="WithoutHeader"
+                    >
+                        <Text text="时间" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem
+                        vAlign="Middle"
+                        type="Inactive"
+                    >
+                        <cells>
+                            <ObjectIdentifier
+                                title="{tci>value}"
+                                titleActive="true"
+                                titlePress="onCheckInItemPress"
+                                text="{
+                                        path:'tci>comment',
+                                        formatter : '.formatEmptyText'
+                                    }"
+                            />
+                            <TimePicker
+                                value="{
+                                        path:'tci>timestamp',
+                                        type:'sap.ui.model.type.Time',
+                                        formatOptions: {
+                                            'pattern': 'HH:mm'
+                                        }
+                                    }"
+                            />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </VBox>
+        <footer>
+            <Bar />
+        </footer>
+    </Page>
+</mvc:View>
