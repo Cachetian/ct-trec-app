@@ -278,7 +278,7 @@ sap.ui.define(
                                 new sap.m.Title({ text: "Message {view>messageCount}" }),
                                 new sap.m.ToolbarSpacer(),
                                 new sap.m.Button({
-                                    icon: "sap-icon://database",
+                                    icon: "sap-icon://save",
                                     press: () => this.onStoreAllData(),
                                 }),
                                 new sap.m.Button({
@@ -361,7 +361,7 @@ sap.ui.define(
             },
 
             formatEmptyText: function (sText) {
-                return sText ? sText : "-";
+                return sText ? sText : "No comment";
             },
         });
     }
