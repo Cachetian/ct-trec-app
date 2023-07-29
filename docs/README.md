@@ -12,9 +12,9 @@ End user can do check-in by adding new check-in item with value and timestamp
 
 End user can new a check-in type
 
-#### FU03 New check-in type
+#### FU03 New check-in scenario
 
-End user can new a check-in type
+End user can new a check-in scenario
 
 ### Non-Functional
 
