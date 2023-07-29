@@ -17,6 +17,11 @@ sap.ui.define(
                 oModel.setDefaultBindingMode("OneWay");
                 return oModel;
             },
+            createCheckScenariosModel: function () {
+                const oModel = new JSONModel({ "new": { "text": "" }, "types": [{ "text": "Day" }] });
+                oModel.setDefaultBindingMode("TwoWay");
+                return oModel;
+            },
             createCheckTypesModel: function () {
                 const oModel = new JSONModel({ "new": { "text": "" }, "types": [{ "text": "Do" }] });
                 oModel.setDefaultBindingMode("TwoWay");
