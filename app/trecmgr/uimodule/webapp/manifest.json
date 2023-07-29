@@ -84,10 +84,10 @@
       },
       "routes": [
         {
-          "name": "routeMainView",
+          "name": "routeMain",
           "pattern": ":?query:",
           "target": [
-            "TargetMainView"
+            "targetMain"
           ]
         },
         {
@@ -106,12 +106,12 @@
         }
       ],
       "targets": {
-        "TargetMainView": {
+        "targetMain": {
           "viewType": "XML",
           "transition": "slide",
           "clearControlAggregation": false,
-          "viewId": "MainView",
-          "viewName": "MainView"
+          "viewId": "mainView",
+          "viewName": "Main"
         },
         "targetSetting": {
           "viewType": "XML",
