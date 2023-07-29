@@ -4,20 +4,18 @@
     displayBlock="true"
     xmlns="sap.m"
 >
-    <Page
-        id="page"
-        title="{i18n>title} ({view>/itemsCount})"
-    >
+    <Page title="{i18n>title} ({view>/itemsCount})">
         <headerContent>
-            <OverflowToolbar>
-                <ToolbarSpacer />
-                <Button
-                    icon="sap-icon://action-settings"
-                    press="onOpenMessage"
-                    visible="{= !${view>/ui/cmdPanelExpanded}}"
-                />
-                <Switch state="{view>/settings/use_remote_odata}" />
-            </OverflowToolbar>
+            <HBox>
+                <OverflowToolbar>
+                    <ToolbarSpacer />
+                    <Button
+                        icon="sap-icon://action-settings"
+                        press="onOpenMessage"
+                        visible="{= !${view>/ui/cmdPanelExpanded}}"
+                    />
+                </OverflowToolbar>
+            </HBox>
         </headerContent>
         <VBox visible="{=!${view>/ui/checkInTypesEditable}}">
             <Table
