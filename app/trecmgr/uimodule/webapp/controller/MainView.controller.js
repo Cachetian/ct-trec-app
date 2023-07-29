@@ -1,28 +1,38 @@
 sap.ui.define(
-    ["./BaseController", "sap/ui/model/json/JSONModel", "sap/ui/util/Storage", "../core/eventQueue"],
+    ["./BaseController", "sap/ui/model/json/JSONModel", "sap/ui/util/Storage", "sap/base/util/UriParameters", "../core/eventQueue"],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel, Storage, eventQueue) {
+    function (Controller, JSONModel, Storage, UriParameters, eventQueue) {
         "use strict";
 
         return Controller.extend("ct.trec.trecmgr.controller.MainView", {
             onInit: function () {
                 this.setModel(new JSONModel({
-                    "message": "",
-                    "messageCount": 0,
-                    "typesCount": 0,
-                    "itemsCount": 0,
-                    "ui": {
-                        "cmdPanelExpanded": false,
-                        "checkInTypesEditable": false,
-                        "checkInItemsEditable": false,
+                    message: "",
+                    messageCount: 0,
+                    typesCount: 0,
+                    itemsCount: 0,
+                    ui: {
+                        cmdPanelExpanded: false,
+                        checkInTypesEditable: false,
+                        checkInItemsEditable: false,
                     },
-                    "settings": {
-                        "use_remote_odata": false
+                    state: {
+                        remoteEventHandlerRegistered: false
+                    },
+                    settings: {
+                        // eslint-disable-next-line camelcase
+                        use_remote_odata: false
                     }
                 }), "view");
+                // read settings from Uri
+                const value = UriParameters.fromQuery(window.location.search).get("use_remote_odata");
+                if (value === "true") {
+                    this.getModel("view").setProperty("/settings/use_remote_odata", true);
+                }
                 if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+                    // use remote data
                     const oDataModel = this.getOwnerComponent().getModel();
                     oDataModel.metadataLoaded(true).then(() => {
                         oDataModel.read("/CheckInTypes", {
@@ -64,8 +74,10 @@ sap.ui.define(
                                 });
                             })
                         });
+                        this.getModel("view").setProperty("/state/remoteEventHandlerRegistered", true);
                     })
                 } else {
+                    // use local data
                     this._oStorage = new Storage(Storage.Type.local, "trec_all_data");
                     const data = this._preProcessImport(JSON.parse(this._oStorage.get("stored_data")));
                     if (data) {
@@ -84,7 +96,7 @@ sap.ui.define(
                     "ID": this.getModel("ckt").getProperty("/types").length,
                     "text": text
                 };
-                if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+                if (this.getModel("view").getProperty("/settings/use_remote_odata") && this.getModel("view").getProperty("/state/remoteEventHandlerRegistered")) {
                     eventQueue.emit({ event: "create-CheckInTypes", data: data });
                 }
                 this.getModel("ckt").getProperty("/types").push(data);
@@ -134,7 +146,7 @@ sap.ui.define(
                     "value": oEvent.getSource().getBindingContext("ckt").getObject().text,
                     "timestamp": new Date()
                 }
-                if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+                if (this.getModel("view").getProperty("/settings/use_remote_odata") && this.getModel("view").getProperty("/state/remoteEventHandlerRegistered")) {
                     eventQueue.emit({ event: "create-TypedCheckIns", data: data });
                 }
                 this.getModel("tci").getProperty("/items").push(data);
@@ -346,10 +358,6 @@ sap.ui.define(
                 }
 
                 return data;
-            },
-
-            formatListCount: function (array) {
-                return array?.length;
             },
 
             formatEmptyText: function (sText) {
