@@ -4,23 +4,29 @@ Welcome to your new project.
 
 It contains these folders and files, following our recommended project layout:
 
-| File or Folder | Purpose                              |
-| -------------- | ------------------------------------ |
-| `app/`         | content for UI frontends goes here   |
-| `db/`          | your domain models and data go here  |
-| `srv/`         | your service models and code go here |
-| `package.json` | project metadata and configuration   |
-| `.cdsrc.json`  | cds profile                          |
-| `readme.md`    | this getting started guide           |
-
+| File or Folder | Purpose                                  |
+| -------------- | ---------------------------------------- |
+| `app/`         | approuter module                         |
+| `app/trecmgr/` | leading app trec ui module               |
+| `db/`          | your domain models and data go here      |
+| `srv/`         | your service models and code go here     |
+| `docs/`        | the documentation, getting started guide |
+| `package.json` | project metadata and configuration       |
+| `.cdsrc.json`  | cds profile                              |
+| `mta.yaml`     | SAP BTP CF runtime deploy config         |
 
 ## Next Steps
 
-- Open a new terminal and run `cds watch` 
+### Backend service
+
+- Open a new terminal and run `cds watch` for debug or `npm run start` for run.
 - (in VS Code simply choose _**Terminal** > Run Task > cds watch_)
-- Start adding content, for example, a [db/schema.cds](db/schema.cds).
 
+### Frontend app
 
-## Learn More
+- Open a new terminal, cd to `cd app/trecmgr` and run `npm run start`.
+- (in VS Code simply choose _**Terminal** > Run Task > npm: start - app/trecmgr_)
 
-Learn more at https://cap.cloud.sap/docs/get-started/.
+## Credits
+
+This project has been generated with [cap sdk cds init](https://cap.cloud.sap/docs/get-started/in-a-nutshell).
