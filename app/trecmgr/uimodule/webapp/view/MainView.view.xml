@@ -12,10 +12,6 @@
             <OverflowToolbar>
                 <ToolbarSpacer />
                 <Button
-                    icon="sap-icon://save"
-                    press="onStoreAllData"
-                />
-                <Button
                     icon="sap-icon://action-settings"
                     press="onOpenMessage"
                     visible="{= !${view>/ui/cmdPanelExpanded}}"
