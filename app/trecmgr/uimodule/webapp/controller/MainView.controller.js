@@ -153,42 +153,6 @@ sap.ui.define(
                 this.getModel("tci").refresh();
             },
 
-            onCheckInItemPress: function (oEvent) {
-                const oBindingContext = oEvent.getSource().getBindingContext("tci");
-                if (!this._dialog) {
-                    this._dialog = new sap.m.Dialog({
-                        title: 'Comment {tci>ID}',
-                        content: [
-                            new sap.m.Input({
-                                value: "{tci>comment}"
-                            })
-                        ],
-                        endButton: new sap.m.Button({
-                            icon: "sap-icon://decline",
-                            press: () => this._dialog.close()
-                        }),
-                        afterClose: () => this._dialog.unbindElement()
-                    })
-                    this._dialog.addStyleClass("sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader");
-                }
-                const dialog = this._dialog;
-                dialog.setModel(this.getModel("tci"), "tci");
-                dialog.bindElement({ path: oBindingContext.getPath(), model: "tci" });
-                dialog.open();
-            },
-
-            onEditCheckInItems: function () {
-                this.getModel("view").setProperty("/ui/checkInItemsEditable", !this.getModel("view").getProperty("/ui/checkInItemsEditable"));
-            },
-
-            onDeleteCheckInItem: function (oEvent) {
-                const array = this.getModel("tci").getProperty("/items");
-                const item = oEvent.getParameter("listItem").getBindingContext("tci").getObject();
-                const index = array.indexOf(item);
-                array.splice(index, 1);
-                this.getModel("tci").setProperty("/items", array);
-            },
-
             onPushAllData: function () {
                 if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
                     const data = {
@@ -263,6 +227,42 @@ sap.ui.define(
             onItemsUpdateFinished: function (oEvent) {
                 // update the master list object counter after new data is loaded
                 this._updateItemsCount(oEvent.getParameter("total"));
+            },
+
+            onCheckInItemPress: function (oEvent) {
+                const oBindingContext = oEvent.getSource().getBindingContext("tci");
+                if (!this._dialog) {
+                    this._dialog = new sap.m.Dialog({
+                        title: 'Comment {tci>ID}',
+                        content: [
+                            new sap.m.Input({
+                                value: "{tci>comment}"
+                            })
+                        ],
+                        endButton: new sap.m.Button({
+                            icon: "sap-icon://decline",
+                            press: () => this._dialog.close()
+                        }),
+                        afterClose: () => this._dialog.unbindElement()
+                    })
+                    this._dialog.addStyleClass("sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader");
+                }
+                const dialog = this._dialog;
+                dialog.setModel(this.getModel("tci"), "tci");
+                dialog.bindElement({ path: oBindingContext.getPath(), model: "tci" });
+                dialog.open();
+            },
+
+            onEditCheckInItems: function () {
+                this.getModel("view").setProperty("/ui/checkInItemsEditable", !this.getModel("view").getProperty("/ui/checkInItemsEditable"));
+            },
+
+            onDeleteCheckInItem: function (oEvent) {
+                const array = this.getModel("tci").getProperty("/items");
+                const item = oEvent.getParameter("listItem").getBindingContext("tci").getObject();
+                const index = array.indexOf(item);
+                array.splice(index, 1);
+                this.getModel("tci").setProperty("/items", array);
             },
 
             onOpenMessage: function () {
