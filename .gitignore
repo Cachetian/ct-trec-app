@@ -34,3 +34,4 @@ mta_archives/
 .e*
 package-lock.json
 dist
+.local/
