@@ -12,8 +12,6 @@ sap.ui.define(
                     new JSONModel({
                         message: "",
                         messageCount: 0,
-                        typesCount: 0,
-                        itemsCount: 0,
                         ui: {
                             cmdPanelExpanded: false,
                             checkInTypesEditable: false,
@@ -32,24 +30,8 @@ sap.ui.define(
                 this.initModelData();
             },
 
-            onRecordPress: function () {
-                this.navTo("routeRecordReadOnly");
-            },
-
-            onSettingPress: function () {
-                this.navTo("routeSetting");
-            },
-
-            onTypesModelCtxChange: function (oEvent) {
-                if (!this._title) {
-                    this._title = new sap.m.Label({
-                        text: "记录 ({view>/itemsCount})"
-                    });
-                }
-                const toolbar = oEvent.getSource();
-                if (toolbar.indexOfContent(this._title) < 0) {
-                    toolbar.addContent(this._title);
-                }
+            onHomePress: function () {
+                this.navTo("routeMainView");
             },
 
             onNewCheckInType: function () {
@@ -125,8 +107,7 @@ sap.ui.define(
                         title: "Comment {tci>ID}",
                         content: [
                             new sap.m.Input({
-                                value: "{tci>comment}",
-                                placeholder: "备注"
+                                value: "{tci>comment}"
                             })
                         ],
                         endButton: new sap.m.Button({

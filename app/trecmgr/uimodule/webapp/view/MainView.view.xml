@@ -4,18 +4,21 @@
     displayBlock="true"
     xmlns="sap.m"
 >
-    <Page title="{i18n>title} ({view>/itemsCount})">
+    <Page title="{i18n>title}">
         <headerContent>
-            <HBox>
-                <OverflowToolbar>
-                    <ToolbarSpacer />
-                    <Button
-                        icon="sap-icon://action-settings"
-                        press="onOpenMessage"
-                        visible="{= !${view>/ui/cmdPanelExpanded}}"
-                    />
-                </OverflowToolbar>
-            </HBox>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+                <Button
+                    icon="sap-icon://show"
+                    press="onRecordPress"
+                    visible="{= !${view>/ui/cmdPanelExpanded}}"
+                />
+                <Button
+                    icon="sap-icon://action-settings"
+                    press="onSettingPress"
+                    visible="{= !${view>/ui/cmdPanelExpanded}}"
+                />
+            </OverflowToolbar>
         </headerContent>
         <VBox visible="{=!${view>/ui/checkInTypesEditable}}">
             <Table
@@ -24,6 +27,8 @@
                 mode="Delete"
                 delete="onDeleteCheckInItem"
                 updateFinished=".onItemsUpdateFinished"
+                growing="true"
+                growingThreshold="20"
                 items="{ 
                         path: 'tci>/items',
                         sorter: {
@@ -35,7 +40,10 @@
                     }"
             >
                 <headerToolbar>
-                    <OverflowToolbar content="{ckt>/types}">
+                    <OverflowToolbar
+                        content="{ckt>/types}"
+                        modelContextChange="onTypesModelCtxChange"
+                    >
                         <Button
                             text="{ckt>text}"
                             press="onTypedCheckIn"

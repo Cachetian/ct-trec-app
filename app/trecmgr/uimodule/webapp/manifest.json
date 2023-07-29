@@ -84,10 +84,24 @@
       },
       "routes": [
         {
-          "name": "RouteMainView",
+          "name": "routeMainView",
           "pattern": ":?query:",
           "target": [
             "TargetMainView"
+          ]
+        },
+        {
+          "name": "routeSetting",
+          "pattern": "setting:?query:",
+          "target": [
+            "targetSetting"
+          ]
+        },
+        {
+          "name": "routeRecordReadOnly",
+          "pattern": "recordReadOnly:?query:",
+          "target": [
+            "targetRecordReadOnly"
           ]
         }
       ],
@@ -98,6 +112,20 @@
           "clearControlAggregation": false,
           "viewId": "MainView",
           "viewName": "MainView"
+        },
+        "targetSetting": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "settingView",
+          "viewName": "Setting"
+        },
+        "targetRecordReadOnly": {
+          "viewType": "XML",
+          "transition": "fade",
+          "clearControlAggregation": false,
+          "viewId": "recordReadOnlyView",
+          "viewName": "RecordReadOnly"
         }
       }
     },
