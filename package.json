@@ -1,9 +1,9 @@
 {
   "name": "ct-trec-app",
   "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
+  "description": "time recording app",
+  "repository": "https://github.com/Cachetian/ct-trec-app.git",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1.10.6",
