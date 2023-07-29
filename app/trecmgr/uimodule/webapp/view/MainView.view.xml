@@ -11,9 +11,8 @@
             <headerToolbar>
                 <OverflowToolbar>
                     <HBox alignItems="Center" visible="{= !${view>/ui/cmdPanelExpanded}}">
-                        <Label text="打卡" showColon="true" labelFor="checkInTypeInput"
-                            width="2rem" class="sapUiTinyMarginEnd" />
-                        <Input value="{ckt>/new/text}" width="8rem" />
+                        <Label text="" labelFor="checkInTypeInput" class="sapUiTinyMarginEnd" />
+                        <Input value="{ckt>/new/text}" width="8rem" placeholder="打卡类型" />
                         <Button icon="sap-icon://add" press="onNewCheckInType" type="Transparent" />
                         <Button icon="sap-icon://edit" press="onEditCheckInTypes" type="Transparent"
                             visible="{=!${view>/ui/checkInTypesEditable}}" />
