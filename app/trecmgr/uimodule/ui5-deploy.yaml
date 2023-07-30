@@ -1,0 +1,23 @@
+specVersion: "3.0"
+metadata:
+  name: trecmgr_uimodule
+type: application
+resources:
+  configuration:
+    paths:
+      webapp: uimodule/webapp
+framework:
+  name: OpenUI5
+  version: 1.108.0
+  libraries:
+    - name: sap.ui.core
+    - name: sap.m
+    - name: sap.ui.layout
+    - name: themelib_sap_horizon
+builder:
+  resources:
+    excludes:
+      - "/test/**"
+  customTasks:
+    - name: ui5-task-cachebuster-indexing
+      afterTask: generateCachebusterInfo
