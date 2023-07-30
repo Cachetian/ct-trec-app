@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {
+      "source": "^(.*)$",
+      "target": "/cttrecrecordscreate/$1",
+      "destination": "html5-apps-repo-rt",
+      "authenticationType": "none"
+    }
+  ],
+  "welcomeFile": "/index.html"
+}

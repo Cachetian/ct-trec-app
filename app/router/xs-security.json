@@ -1,5 +1,27 @@
 {
-  "scopes": [],
+  "description": "Security profile of trec application",
+  "scopes": [
+    {
+      "name": "uaa.user",
+      "description": "UAA"
+    }
+  ],
   "attributes": [],
-  "role-templates": []
+  "role-templates": [
+    {
+      "name": "AIIB_CAP_Token_Exchange",
+      "description": "UAA",
+      "scope-references": [
+        "uaa.user"
+      ]
+    }
+  ],
+  "oauth2-configuration": {
+    "redirect-uris": [
+      "https://*.cfapps.sap.hana.ondemand.com/**",
+      "https://*.cn40.platform.sapcloud.cn/**",
+      "https://*.sap-cloud.tools/**",
+      "http://localhost:*/login/callback"
+    ]
+  }
 }
