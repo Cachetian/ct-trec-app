@@ -1,5 +1,5 @@
 {
-  "_version": "1.44.0",
+  "_version": "1.42.0",
   "sap.app": {
     "id": "ct.trec.recordscreate",
     "type": "application",
@@ -9,22 +9,19 @@
     },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
-    "resources": "resources.json",
-    "sourceTemplate": {
-      "id": "@sap/generator-fiori:basic",
-      "version": "1.8.0",
-      "toolsId": "e9b44ce1-0f5b-4a2c-abbb-8c1e75ca0b08"
-    },
     "dataSources": {
       "mainService": {
-        "uri": "/service/record/",
+        "uri": "/v2/service/record/",
         "type": "OData",
         "settings": {
-          "annotations": [],
-          "localUri": "localService/metadata.xml",
-          "odataVersion": "4.0"
+          "odataVersion": "2.0"
         }
       }
+    },
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap-ux/fiori-freestyle-writer:basic",
+      "version": "0.14.9"
     }
   },
   "sap.ui": {
@@ -46,16 +43,10 @@
   "sap.ui5": {
     "flexEnabled": true,
     "dependencies": {
-      "minUI5Version": "1.104.0",
+      "minUI5Version": "1.102.0",
       "libs": {
         "sap.m": {},
-        "sap.ui.core": {},
-        "sap.f": {},
-        "sap.suite.ui.generic.template": {},
-        "sap.ui.comp": {},
-        "sap.ui.generic.app": {},
-        "sap.ui.table": {},
-        "sap.ushell": {}
+        "sap.ui.core": {}
       }
     },
     "contentDensities": {
@@ -71,13 +62,7 @@
       },
       "": {
         "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "synchronizationMode": "None",
-          "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true
-        }
+        "settings": {}
       }
     },
     "resources": {
@@ -99,20 +84,48 @@
       },
       "routes": [
         {
-          "name": "RouteRoot",
+          "name": "routeMain",
           "pattern": ":?query:",
           "target": [
-            "TargetRoot"
+            "targetMain"
+          ]
+        },
+        {
+          "name": "routeSetting",
+          "pattern": "setting:?query:",
+          "target": [
+            "targetSetting"
+          ]
+        },
+        {
+          "name": "routeRecordReadOnly",
+          "pattern": "recordReadOnly:?query:",
+          "target": [
+            "targetRecordReadOnly"
           ]
         }
       ],
       "targets": {
-        "TargetRoot": {
+        "targetMain": {
           "viewType": "XML",
           "transition": "slide",
           "clearControlAggregation": false,
-          "viewId": "Root",
-          "viewName": "Root"
+          "viewId": "mainView",
+          "viewName": "Main"
+        },
+        "targetSetting": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "settingView",
+          "viewName": "Setting"
+        },
+        "targetRecordReadOnly": {
+          "viewType": "XML",
+          "transition": "fade",
+          "clearControlAggregation": false,
+          "viewId": "recordReadOnlyView",
+          "viewName": "RecordReadOnly"
         }
       }
     },

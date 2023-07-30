@@ -38,7 +38,7 @@ sap.ui.define(
         },
 
         getItemsByDateGroup: function (oContext) {
-          return oContext.getProperty("timestamp")?.toLocaleDateString();
+          return oContext.getProperty("timestamp").toLocaleDateString();
         },
 
         getItemsGroupByDateHeader: function (oGroup) {
@@ -56,7 +56,7 @@ sap.ui.define(
         },
 
         _preProcessImport: function (data) {
-          if (data?.TypedCheckIns?.items) {
+          if (data.TypedCheckIns.items) {
             data.TypedCheckIns.items.forEach((it) => {
               it.timestamp = new Date(it.timestamp);
             });
