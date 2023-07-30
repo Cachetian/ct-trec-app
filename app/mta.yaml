@@ -28,14 +28,12 @@ modules:
         - npm run build:cf
       supported-platforms: []
 resources:
-  - name: ct-trec-app-auth
-    type: org.cloudfoundry.existing-service
-  - name: ct-trec-app-db
-    type: org.cloudfoundry.existing-service
   - name: ct-trec-app-repo-host
-    type: org.cloudfoundry.existing-service
-  - name: ct-trec-app-destination-service
-    type: org.cloudfoundry.existing-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: ct-trec-app-html5-srv
+      service-plan: app-host
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
