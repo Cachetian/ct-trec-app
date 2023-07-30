@@ -19,7 +19,7 @@ modules:
     builder: npm-ci
 - name: ct-trec-app
   type: approuter.nodejs
-  path: app/
+  path: app/router/
   requires:
   - name: srv-api
     group: destinations
@@ -76,7 +76,7 @@ resources:
     config:
       tenant-mode: dedicated
       xsappname: ct-trec-app-${org}-${space}
-    path: app/xs-security.json
+    path: app/router/xs-security.json
     service: xsuaa
     service-plan: application
 - name: ct-trec-app-db
