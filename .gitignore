@@ -34,4 +34,6 @@ mta_archives/
 .e*
 package-lock.json
 dist
+Makefile_*
+resources/
 .local/
