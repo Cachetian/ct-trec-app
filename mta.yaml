@@ -1,66 +1,118 @@
 _schema-version: "3.1"
 ID: ct-trec-app
+description: time reocrd app
 version: 1.0.0
-description: "time reocrd app"
+modules:
+- name: ct-trec-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: ct-trec-app-auth
+  - name: ct-trec-app-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm-ci
+- name: ct-trec-app
+  type: approuter.nodejs
+  path: app/
+  requires:
+  - name: srv-api
+    group: destinations
+    properties:
+      forwardAuthToken: true
+      name: srv-api
+      url: ~{srv-url}
+  - name: ct-trec-app-auth
+  - name: ct-trec-app-destination-service
+    group: destinations
+    properties:
+      forwardAuthToken: false
+      name: ui5
+      url: https://ui5.sap.com
+  parameters:
+    disk-quota: 256M
+    keep-existing-routes: true
+    memory: 256M
+- name: ct-trec-app-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: ct-trec-app-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: ct-trec-app-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: ct-trec-app-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - cttrecrecordscreate.zip
+      name: cttrecrecordscreate
+      target-path: resources/
+- name: cttrecrecordscreate
+  type: html5
+  path: app/recordscreate
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: ct-trec-app-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: ct-trec-app-${org}-${space}
+    path: app/xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: ct-trec-app-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: ct-trec-app-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: ct-trec-app-html5-srv
+    service-plan: app-host
+- name: ct-trec-app-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: ct-trec-app-destination-service
+    service-plan: lite
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npx -p @sap/cds-dk cds build --production
-modules:
-  - name: ct-trec-srv
-    type: nodejs
-    path: gen/srv
-    parameters:
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm-ci
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
-    requires:
-      - name: ct-trec-app-auth
-      - name: ct-trec-app-db
-
-  - name: ct-trec-app
-    type: approuter.nodejs
-    path: app/ # from cds.env.folders. Consider also cds.env.build.target -> gen/app
-    parameters:
-      keep-existing-routes: true
-      disk-quota: 256M
-      memory: 256M
-    requires:
-      - name: srv-api
-        group: destinations
-        properties:
-          name: srv-api # must be used in xs-app.json as well
-          url: ~{srv-url}
-          forwardAuthToken: true
-      - name: ct-trec-app-auth
-
-  - name: ct-trec-app-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: ct-trec-app-db
-
-resources:
-  - name: ct-trec-app-auth
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: xsuaa
-      service-plan: application
-      path: app/xs-security.json
-      config:
-        xsappname: ct-trec-app-${org}-${space}
-        tenant-mode: dedicated
-  - name: ct-trec-app-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
+  - builder: custom
+    commands:
+    - npx -p @sap/cds-dk cds build --production

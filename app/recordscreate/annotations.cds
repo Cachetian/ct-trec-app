@@ -1,0 +1,1 @@
+using RecordService as service from '../../srv/rec-service';
