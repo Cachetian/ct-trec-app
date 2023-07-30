@@ -11,6 +11,7 @@ modules:
       - name: ct-trec-app-db
     provides:
       - name: srv-api
+        public: true
         properties:
           srv-url: ${default-url}
     parameters:

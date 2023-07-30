@@ -1,11 +1,18 @@
 {
-  "authenticationMethod": "route",
+  "authenticationMethod": "none",
   "routes": [
+    {
+      "source": "^/v2/service/(.*)$",
+      "target": "/v2/service/$1",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "csrfProtection": false
+    },
     {
       "source": "^(.*)$",
       "target": "/cttrecrecordscreate/$1",
       "service": "html5-apps-repo-rt",
-      "authenticationType": "xsuaa"
+      "authenticationType": "none"
     }
   ],
   "welcomeFile": "/index.html"
