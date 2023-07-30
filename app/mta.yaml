@@ -1,0 +1,46 @@
+_schema-version: "3.1"
+ID: ct-trec-app-ui
+description: time reocrd app ui
+version: 1.0.0
+modules:
+  - name: ct-trec-app-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: ct-trec-app-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - cttrecrecordscreate.zip
+          name: cttrecrecordscreate
+          target-path: resources/
+  - name: cttrecrecordscreate
+    type: html5
+    path: recordscreate
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms: []
+resources:
+  - name: ct-trec-app-auth
+    type: org.cloudfoundry.existing-service
+  - name: ct-trec-app-db
+    type: org.cloudfoundry.existing-service
+  - name: ct-trec-app-repo-host
+    type: org.cloudfoundry.existing-service
+  - name: ct-trec-app-destination-service
+    type: org.cloudfoundry.existing-service
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx -p @sap/cds-dk cds build --production
