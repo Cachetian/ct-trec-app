@@ -27,6 +27,7 @@ modules:
           forwardAuthToken: true
           name: srv-api
           url: ~{srv-url}
+      - name: ct-trec-app-repo-runtime
       - name: ct-trec-app-auth
       - name: ct-trec-app-destination-service
         group: destinations
@@ -90,6 +91,12 @@ resources:
       service: html5-apps-repo
       service-name: ct-trec-app-html5-srv
       service-plan: app-host
+  - name: ct-trec-app-repo-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
+      service-name: html5-apps-repo-rt
   - name: ct-trec-app-destination-service
     type: org.cloudfoundry.managed-service
     parameters:

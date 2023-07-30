@@ -19,7 +19,7 @@
   "oauth2-configuration": {
     "redirect-uris": [
       "https://*.cfapps.sap.hana.ondemand.com/**",
-      "https://*.cn40.platform.sapcloud.cn/**",
+      "https://*.apps.platform.sapcloud.cn/**",
       "https://*.sap-cloud.tools/**",
       "http://localhost:*/login/callback"
     ]

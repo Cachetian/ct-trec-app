@@ -1,0 +1,47 @@
+_schema-version: "3.1"
+ID: ct-trec-app-router
+description: time reocrd app router
+version: 1.0.0
+modules:
+  - name: ct-trec-app
+    type: approuter.nodejs
+    path: .
+    requires:
+      - name: ct-trec-app-repo-runtime
+      - name: ct-trec-app-auth
+      - name: ct-trec-app-destination-service
+        group: destinations
+        properties:
+          forwardAuthToken: false
+          name: ui5
+          url: https://ui5.sap.com
+    parameters:
+      disk-quota: 256M
+      keep-existing-routes: true
+      memory: 256M
+resources:
+  - name: ct-trec-app-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        tenant-mode: dedicated
+        xsappname: ct-trec-app-${org}-${space}
+      path: xs-security.json
+      service: xsuaa
+      service-plan: application
+  - name: ct-trec-app-repo-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
+      service-name: html5-apps-repo-rt
+  - name: ct-trec-app-destination-service
+    type: org.cloudfoundry.existing-service
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx -p @sap/cds-dk cds build --production

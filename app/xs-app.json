@@ -1,11 +1,17 @@
 {
   "routes": [
     {
-      "source": "^(.*)$",
-      "target": "/cttrecrecordscreate/$1",
-      "destination": "html5-apps-repo-rt",
-      "authenticationType": "none"
+      "source": "^/app/(.*)$",
+      "target": "$1",
+      "localDir": ".",
+      "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "$1",
+      "destination": "srv-api",
+      "csrfProtection": true
     }
   ],
-  "welcomeFile": "/index.html"
+  "welcomeFile": "/app/cttrecrecordscreate"
 }
