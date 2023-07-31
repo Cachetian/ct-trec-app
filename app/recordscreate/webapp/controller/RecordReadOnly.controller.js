@@ -55,16 +55,6 @@ sap.ui.define(
           }
         },
 
-        _preProcessImport: function (data) {
-          if (data.TypedCheckIns.items) {
-            data.TypedCheckIns.items.forEach((it) => {
-              it.timestamp = new Date(it.timestamp);
-            });
-          }
-
-          return data;
-        },
-
         formatEmptyText: function (sText) {
           return sText ? sText : "No comment";
         }

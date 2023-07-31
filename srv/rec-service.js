@@ -5,23 +5,12 @@ class RecordService extends cds.ApplicationService {
   /** register custom handlers */
   init() {
 
-    const { CheckInScenarios, CheckInTypes, TypedCheckIns, AllDatas } = this.entities
+    const { CheckInTypes, TypedCheckIns, AllDatas } = this.entities
 
     const memDB = {
-      CheckInScenarios: [{ ID: 0, text: "Day" }],
       CheckInTypes: [{ ID: 0, text: "Do" }],
       TypedCheckIns: [{ value: "Do", timestamp: new Date('2023-06-18T22:11:00.000Z') }]
     }
-
-    this.on('CREATE', CheckInScenarios, (req) => {
-      memDB.CheckInScenarios.push(req.data)
-      req.data.ID = memDB.CheckInTypes.length
-      return req.data
-    })
-
-    this.on('READ', CheckInScenarios, (req) => {
-      return memDB.CheckInScenarios;
-    })
 
     this.on('CREATE', CheckInTypes, (req) => {
       memDB.CheckInTypes.push(req.data)

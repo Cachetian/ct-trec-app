@@ -19,7 +19,7 @@ sap.ui.define(
             message: "",
             messageCount: 0,
             ui: {
-              cmdPanelExpanded: false,
+              cmdPanelExpanded: true,
               checkInTypesEditable: false,
               checkInItemsEditable: false
             },
@@ -335,16 +335,6 @@ sap.ui.define(
         if (this.byId("itemsList").getBinding("items").isLengthFinal()) {
           this.getModel("view").setProperty("/itemsCount", iTotalItems);
         }
-      },
-
-      _preProcessImport: function (data) {
-        if (data.TypedCheckIns.items) {
-          data.TypedCheckIns.items.forEach((it) => {
-            it.timestamp = new Date(it.timestamp);
-          });
-        }
-
-        return data;
       },
 
       formatEmptyText: function (sText) {

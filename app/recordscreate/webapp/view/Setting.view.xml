@@ -16,7 +16,7 @@
             </OverflowToolbar>
         </headerContent>
         <Panel
-            expandable="true"
+            expandable="false"
             expanded="{view>/ui/cmdPanelExpanded}"
         >
             <headerToolbar>
@@ -99,7 +99,7 @@
                     id="msgTextArea"
                     value="{view>/message}"
                     width="100%"
-                    height="12rem"
+                    height="24rem"
                 />
             </content>
         </Panel>

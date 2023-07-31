@@ -90,6 +90,9 @@ sap.ui.define(
               true
             );
           }
+          if (this.getOwnerComponent()._trecInit) {
+            return;
+          }
           if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
             // use remote data
             const oDataModel = this.getOwnerComponent().getModel();
@@ -157,6 +160,20 @@ sap.ui.define(
                 .setData(data.TypedCheckIns);
             }
           }
+          this.getOwnerComponent()._trecInit = true;
+        },
+
+        _preProcessImport: function (data) {
+          if (!data) {
+            return;
+          }
+          if (data.TypedCheckIns.items) {
+            data.TypedCheckIns.items.forEach((it) => {
+              it.timestamp = new Date(it.timestamp);
+            });
+          }
+  
+          return data;
         }
       }
     );
