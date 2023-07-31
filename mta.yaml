@@ -1,5 +1,5 @@
 _schema-version: "3.1"
-ID: ct-trec-app
+ID: trec
 description: time reocrd app
 version: 1.0.0
 modules:

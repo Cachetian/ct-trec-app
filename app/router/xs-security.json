@@ -9,7 +9,7 @@
   "attributes": [],
   "role-templates": [
     {
-      "name": "AIIB_CAP_Token_Exchange",
+      "name": "Token_Exchange",
       "description": "UAA",
       "scope-references": [
         "uaa.user"
@@ -21,6 +21,7 @@
       "https://*.cfapps.sap.hana.ondemand.com/**",
       "https://*.apps.platform.sapcloud.cn/**",
       "https://*.sap-cloud.tools/**",
+      "https://*.app.weikaopu.cn/**",
       "http://localhost:*/login/callback"
     ]
   }
