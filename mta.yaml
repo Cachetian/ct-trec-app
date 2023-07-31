@@ -37,7 +37,7 @@ modules:
           name: ui5
           url: https://ui5.sap.com
     parameters:
-      disk-quota: 256M
+      disk-quota: 512M
       keep-existing-routes: true
       memory: 256M
   - name: ct-trec-app-db-deployer
