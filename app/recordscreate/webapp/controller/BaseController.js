@@ -79,6 +79,10 @@ sap.ui.define(
           }
         },
 
+        getStore: function () {
+          return this.getOwnerComponent()._oStorage;
+        },
+
         initModelData: function () {
           // read settings from Uri
           const value = UriParameters.fromQuery(window.location.search).get(
@@ -93,6 +97,11 @@ sap.ui.define(
           if (this.getOwnerComponent()._trecInit) {
             return;
           }
+          // init
+          this.getOwnerComponent()._oStorage = new Storage(
+            Storage.Type.local,
+            "trec_all_data"
+          );
           if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
             // use remote data
             const oDataModel = this.getOwnerComponent().getModel();
@@ -147,9 +156,8 @@ sap.ui.define(
             });
           } else {
             // use local data
-            this._oStorage = new Storage(Storage.Type.local, "trec_all_data");
             const data = this._preProcessImport(
-              JSON.parse(this._oStorage.get("stored_data"))
+              JSON.parse(this.getStore().get("stored_data"))
             );
             if (data) {
               this.getOwnerComponent()

@@ -214,13 +214,23 @@ sap.ui.define(
           CheckInTypes: this.getModel("ckt").getData(),
           TypedCheckIns: this.getModel("tci").getData()
         });
-        this._oStorage.put("stored_data", data);
+        this.getStore().put("stored_data", data);
         sap.m.MessageToast.show("saved");
       },
 
       onClearAllData: function () {
-        this._oStorage.remove("stored_data");
+        this.getStore().remove("stored_data");
         sap.m.MessageToast.show("cleared");
+      },
+
+      onReadAllData: function () {
+        const data = this._preProcessImport(
+          JSON.parse(this.getStore().get("stored_data"))
+        );
+        if (data) {
+          this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
+          this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
+        }
       },
 
       onExportAllData: function () {

@@ -82,6 +82,10 @@
                             press="onClearAllData"
                         />
                         <Button
+                            text="Read"
+                            press="onReadAllData"
+                        />
+                        <Button
                             text="Push"
                             press="onPushAllData"
                             enabled="{view>/settings/use_remote_odata}"
