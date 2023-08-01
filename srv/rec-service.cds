@@ -12,4 +12,6 @@ service RecordService {
         key name  : String;
             value : String;
     }
+
+    action restoreData() returns String;
 }

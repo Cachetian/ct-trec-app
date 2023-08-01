@@ -55,3 +55,8 @@ Content-Type: application/json
    "value": "DD",
    "timestamp": "/Date(1690908403041)/"
 }
+
+### POST restoreData
+POST http://localhost:4004/v2/service/record/restoreData
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json

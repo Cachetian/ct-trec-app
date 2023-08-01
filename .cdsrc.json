@@ -1,5 +1,21 @@
 {
   "cov2ap": {
     "plugin": true
+  },
+  "requires": {
+    "[production]": {
+      "auth": {
+        "kind": "basic",
+        "users": {
+          "D67D90E2-CB2A-25B8-1AB8-334066B4BA0B": {
+            "password": "4E8DA847-11D8-5E4D-C3CD-582E57387516",
+            "roles": [
+              "Token_Exchange"
+            ],
+            "attr": {}
+          }
+        }
+      }
+    }
   }
 }

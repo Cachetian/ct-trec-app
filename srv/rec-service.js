@@ -52,6 +52,10 @@ class RecordService extends cds.ApplicationService {
       }
     })
 
+    this.on('restoreData', (req) => {
+      return "200"
+    })
+
     return super.init()
   }
 
