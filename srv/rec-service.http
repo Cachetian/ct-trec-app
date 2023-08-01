@@ -11,3 +11,47 @@ Content-Type: application/json
     "ID": 1,
     "text" : "Do"
 }
+
+### GET PersCheckInTypes
+GET http://localhost:4004/v2/service/record/CheckInTypes
+Authorization: Basic dXNlcjpwYXNz
+
+### POST PersCheckInTypes
+POST http://localhost:4004/v2/service/record/CheckInTypes
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+{
+    "ID": 1,
+    "text" : "Do"
+}
+
+### GET PersTypedCheckIns
+GET http://localhost:4004/v2/service/record/PersTypedCheckIns
+Authorization: Basic dXNlcjpwYXNz
+
+### POST PersTypedCheckIns
+POST http://localhost:4004/v2/service/record/PersTypedCheckIns
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+{
+   "ID": 1,
+   "value": "DD",
+   "timestamp": "/Date(1690908403041)/"
+}
+
+### GET TypedCheckIns
+GET http://localhost:4004/v2/service/record/TypedCheckIns
+Authorization: Basic dXNlcjpwYXNz
+
+### POST TypedCheckIns
+POST http://localhost:4004/v2/service/record/TypedCheckIns
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+{
+   "ID": 1,
+   "value": "DD",
+   "timestamp": "/Date(1690908403041)/"
+}
