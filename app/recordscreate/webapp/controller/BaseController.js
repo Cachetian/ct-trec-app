@@ -172,7 +172,7 @@ sap.ui.define(
               it.timestamp = new Date(it.timestamp);
             });
           }
-  
+
           return data;
         }
       }

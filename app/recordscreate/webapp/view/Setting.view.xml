@@ -16,7 +16,7 @@
             </OverflowToolbar>
         </headerContent>
         <Panel
-            expandable="false"
+            expandable="true"
             expanded="{view>/ui/cmdPanelExpanded}"
         >
             <headerToolbar>

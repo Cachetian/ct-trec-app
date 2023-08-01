@@ -19,8 +19,8 @@ entity ScenarioTypeAssigments {
  * Types
  */
 entity CheckInTypes {
-  key ID   : Integer;
-      text : String;
+  key ID        : Integer;
+      text      : String;
       scenarios : Association to many ScenarioTypeAssigments
                     on scenarios.types = $self;
 }
