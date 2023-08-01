@@ -12,11 +12,11 @@ Content-Type: application/json
     "text" : "Do"
 }
 
-### GET PersCheckInTypes
+### GET CheckInTypes
 GET http://localhost:4004/v2/service/record/CheckInTypes
 Authorization: Basic dXNlcjpwYXNz
 
-### POST PersCheckInTypes
+### POST CheckInTypes
 POST http://localhost:4004/v2/service/record/CheckInTypes
 Authorization: Basic dXNlcjpwYXNz
 Content-Type: application/json
@@ -58,5 +58,10 @@ Content-Type: application/json
 
 ### POST restoreData
 POST http://localhost:4004/v2/service/record/restoreData
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+### POST saveAllData
+POST http://localhost:4004/v2/service/record/saveAllData
 Authorization: Basic dXNlcjpwYXNz
 Content-Type: application/json

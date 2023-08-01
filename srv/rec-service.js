@@ -35,8 +35,12 @@ class RecordService extends cds.ApplicationService {
     this.on('CREATE', AllDatas, (req) => {
       if (req.data.name === "pushAllData") {
         const data = JSON.parse(req.data.value)
-        memDB.CheckInTypes = data.CheckInTypes
-        memDB.TypedCheckIns = data.TypedCheckIns
+        memDB.CheckInTypes = data.CheckInTypes.map((it) => {
+          return ({ ID: it.ID, text: it.text });
+        });
+        memDB.TypedCheckIns = data.TypedCheckIns.map((it) => {
+          return { ID: it.ID, text: it.text };
+        });
       }
       return req.data
     })
@@ -53,6 +57,12 @@ class RecordService extends cds.ApplicationService {
     })
 
     this.on('restoreData', (req) => {
+      return "200"
+    })
+
+    this.on('saveAllData', async (req) => {
+      await UPSERT.into (CheckInTypes, memDB.CheckInTypes);
+      await UPSERT.into (TypedCheckIns, memDB.TypedCheckIns);
       return "200"
     })
 
