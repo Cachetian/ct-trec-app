@@ -1,0 +1,13 @@
+### GET PersCheckInTypes
+GET http://localhost:4004/v2/service/record/PersCheckInTypes
+Authorization: Basic dXNlcjpwYXNz
+
+### POST PersCheckInTypes
+POST http://localhost:4004/v2/service/record/PersCheckInTypes
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+{
+    "ID": 1,
+    "text" : "Do"
+}
