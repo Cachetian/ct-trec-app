@@ -12,6 +12,7 @@
       "source": "^(.*)$",
       "target": "/cttrecrecordscreate/$1",
       "service": "html5-apps-repo-rt",
+      "cacheControl": "public, max-age=1000,must-revalidate",
       "authenticationType": "none"
     }
   ],
