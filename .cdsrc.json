@@ -2,6 +2,12 @@
   "cov2ap": {
     "plugin": true
   },
+  "log": {
+    "levels": {
+      "cds": "info",
+      "srv.record": "info"
+    }
+  },
   "requires": {
     "[production]": {
       "auth": {

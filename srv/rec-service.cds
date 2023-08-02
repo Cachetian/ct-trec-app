@@ -15,4 +15,5 @@ service RecordService {
 
   action restoreData() returns String;
   action saveAllData() returns String;
+  action hello()       returns String;
 }

@@ -65,3 +65,8 @@ Content-Type: application/json
 POST http://localhost:4004/v2/service/record/saveAllData
 Authorization: Basic dXNlcjpwYXNz
 Content-Type: application/json
+
+### POST hello
+POST http://localhost:4004/v2/service/record/hello
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json

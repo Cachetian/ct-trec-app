@@ -3,8 +3,8 @@ const cds = require("@sap/cds");
 class RecordService extends cds.ApplicationService {
   /** register custom handlers */
   init() {
+    const LOG = cds.log("srv.record");
     const { CheckInTypes, TypedCheckIns, AllDatas } = this.entities;
-
     const memDB = {
       CheckInTypes: [{ ID: 0, text: "Do" }],
       TypedCheckIns: [
@@ -61,16 +61,27 @@ class RecordService extends cds.ApplicationService {
     });
 
     this.on("restoreData", async (req) => {
+      LOG.info("restoring data from db");
       memDB.CheckInTypes = await SELECT.from(CheckInTypes);
       memDB.TypedCheckIns = await SELECT.from(TypedCheckIns);
       return "200";
     });
 
     this.on("saveAllData", async (req) => {
+      LOG.info("saving all data");
       await UPSERT.into(CheckInTypes, memDB.CheckInTypes);
       await UPSERT.into(TypedCheckIns, memDB.TypedCheckIns);
       return "200";
     });
+
+    this.on("hello", async () => {
+      LOG.info("hello");
+      return "200";
+    });
+
+    LOG.info("record service initialized");
+
+    this.emit("restoreData");
 
     return super.init();
   }
