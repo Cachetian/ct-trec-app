@@ -6,6 +6,8 @@ service RecordService {
   entity PersCheckInTypes  as projection on db.CheckInTypes;
   entity TypedCheckIns     as projection on db.TypedCheckIns;
   entity PersTypedCheckIns as projection on db.TypedCheckIns;
+  entity Scenarios         as projection on db.CheckInScenarios;
+  entity PersScenarios     as projection on db.CheckInScenarios;
 
   @cds.persistence.exists
   entity AllDatas {

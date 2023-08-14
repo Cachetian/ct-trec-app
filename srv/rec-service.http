@@ -56,6 +56,20 @@ Content-Type: application/json
    "timestamp": "/Date(1690908403041)/"
 }
 
+### GET Scenarios
+GET http://localhost:4004/v2/service/record/Scenarios
+Authorization: Basic dXNlcjpwYXNz
+
+### POST Scenarios
+POST http://localhost:4004/v2/service/record/Scenarios
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+{
+   "ID": 1,
+   "text": "Life"
+}
+
 ### POST restoreData
 POST http://localhost:4004/v2/service/record/restoreData
 Authorization: Basic dXNlcjpwYXNz
