@@ -35,7 +35,7 @@
     }
   },
   "sapux": [
-    "app/recordscreate"
+    "app/recordscreate/uimodule"
   ],
   "devDependencies": {
     "@sap/ux-specification": "^1.102.26",
