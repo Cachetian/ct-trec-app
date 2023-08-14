@@ -1,4 +1,9 @@
-# CT TREC APP
+# 计时打卡 app 文档
+
+## Index
+
+1. DevOps 相关
+2. 版本信息
 
 ## Features
 
