@@ -1,5 +1,5 @@
 {
-  "name": "approuter",
+  "name": "app-router",
   "dependencies": {
     "@sap/approuter": "^14.1.2"
   },

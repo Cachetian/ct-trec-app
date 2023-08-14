@@ -19,7 +19,7 @@ modules:
           target-path: resources/
   - name: cttrecrecordscreate
     type: html5
-    path: recordscreate
+    path: recordscreate/uimodule
     build-parameters:
       build-result: dist
       builder: custom
