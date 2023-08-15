@@ -10,9 +10,11 @@
     "karma": "run-s clearCoverage karma-ci",
     "lint": "eslint ./**/webapp/**/*.js && prettier --plugin-search-dir=. --check ./**/webapp/**/*.{js,xml} --no-error-on-unmatched-pattern",
     "lint-fix": "eslint ./**/webapp/**/*.js --fix && prettier --plugin-search-dir=. --write ./**/webapp/**/*.{js,xml} --no-error-on-unmatched-pattern",
-    "build:uimodule": "ui5 build --config=uimodule/ui5-deploy.yaml --clean-dest --dest uimodule/dist --include-task=generateManifestBundle"
+    "build:uimodule": "ui5 build --config=uimodule/ui5-deploy.yaml --clean-dest --dest uimodule/dist --include-task=generateManifestBundle",
+    "build:cf": "ui5 build --config=ui5-deploy.yaml --clean-dest --dest uimodule/dist --include-task=generateManifestBundle"
   },
   "devDependencies": {
+    "@sap/ui5-builder-webide-extension": "^1.1.8",
     "@prettier/plugin-xml": "^2.2.0",
     "@ui5/cli": "^3.2.0",
     "eslint": "^8.43.0",
@@ -25,6 +27,7 @@
     "shx": "^0.3.4",
     "ui5-middleware-livereload": "^0.8.3",
     "ui5-middleware-simpleproxy": "^0.9.9",
+    "ui5-task-zipper": "^0.5.0",
     "ui5-task-cachebuster-indexing": "^1.0.2"
   }
 }
