@@ -29,7 +29,7 @@ sap.ui.define(
             }),
             "view"
           );
-          this.initModelDataOnce();
+          this.getRouter().getRoute("routeRecordReadOnly").attachMatched(this.handleQueryRouteMatched, this);
         },
 
         onItemsUpdateFinished: function (oEvent) {
