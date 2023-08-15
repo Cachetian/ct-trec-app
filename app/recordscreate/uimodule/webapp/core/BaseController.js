@@ -65,6 +65,16 @@ sap.ui.define(
           this.getRouter().navTo(psTarget, pmParameters, pbReplace);
         },
 
+        navToW: function (psTarget, pbReplace) {
+          const oQueryArgs = this.getOwnerComponent()._oRouterLastQueryArgs
+          if (oQueryArgs)
+            this.getRouter().navTo(psTarget, {
+              "?query": oQueryArgs
+            }, pbReplace);
+          else
+            this.getRouter().navTo(psTarget, {}, pbReplace);
+        },
+
         getRouter: function () {
           return UIComponent.getRouterFor(this);
         },
@@ -75,7 +85,7 @@ sap.ui.define(
           if (sPreviousHash !== undefined) {
             window.history.back();
           } else {
-            this.getRouter().navTo("appHome", {}, true /* no history*/);
+            this.getRouter().navTo("routeMain", {}, true /* no history*/);
           }
         },
 
@@ -83,18 +93,45 @@ sap.ui.define(
           return this.getOwnerComponent()._oStorage;
         },
 
-        initModelData: function () {
-          // read settings from Uri
-          const value = UriParameters.fromQuery(window.location.search).get(
-            "use_remote_odata"
-          );
-          if (value === "true") {
-            this.getModel("view").setProperty(
-              "/settings/use_remote_odata",
-              true
-            );
+        handleQueryRouteMatched: function (oEvent) {
+          const routeChanged = (oEvent.getParameter("name") !== this.getOwnerComponent()._sRouterLastRoute);
+          const oArguments = oEvent.getParameter("arguments");
+          oArguments["?query"] = oArguments["?query"] || {
+            "use-remote-data": ""
+          };
+
+          let useRemoteDataChanged = false, useRemoteData = oArguments["?query"]["use-remote-data"];
+          if (!useRemoteData) useRemoteData = "";
+          if (
+            useRemoteData &&
+            (routeChanged || useRemoteData !== this.getOwnerComponent()._oRouterLastQueryArgs["use-remote-data"])
+          ) {
+            useRemoteDataChanged = true;
+            this.getModel("view").setProperty("/settings/use_remote_data", useRemoteData === "true");
+            this.onUseRemoteDataChanged();
+            this.getOwnerComponent()._oRouterLastQueryArgs["use-remote-data"] = useRemoteData;
           }
-          if (this.getOwnerComponent()._trecInit) {
+
+          if (useRemoteDataChanged) {
+            this.onRouteQueryChanged();
+          }
+
+          if (routeChanged)
+            this.getOwnerComponent()._sRouterLastRoute = oEvent.getParameter("name");
+        },
+
+        onRouteQueryChanged: function () {
+        },
+
+        onUseRemoteDataChanged: function () {
+          this.initModelDataOnce();
+        },
+
+        /**
+         * Init model data once.
+         */
+        initModelDataOnce: function () {
+          if (this.getOwnerComponent()._bTrecInited) {
             return;
           }
           // init
@@ -102,7 +139,7 @@ sap.ui.define(
             Storage.Type.local,
             "trec_all_data"
           );
-          if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+          if (this.getModel("view").getProperty("/settings/use_remote_data")) {
             // use remote data
             const oDataModel = this.getOwnerComponent().getModel();
             oDataModel.metadataLoaded(true).then(() => {
@@ -168,7 +205,7 @@ sap.ui.define(
                 .setData(data.TypedCheckIns);
             }
           }
-          this.getOwnerComponent()._trecInit = true;
+          this.getOwnerComponent()._bTrecInited = true;
         },
 
         _preProcessImport: function (data) {

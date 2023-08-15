@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "./BaseController",
+    "../core/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/util/Storage",
     "sap/base/util/UriParameters",
@@ -30,20 +30,20 @@ sap.ui.define(
             },
             settings: {
               // eslint-disable-next-line camelcase
-              use_remote_odata: false
+              use_remote_data: false
             }
           }),
           "view"
         );
-        this.initModelData();
+        this.getRouter().getRoute("routeMain").attachMatched(this.handleQueryRouteMatched, this);
       },
 
       onRecordPress: function () {
-        this.navTo("routeRecordReadOnly");
+        this.navToW("routeRecordReadOnly");
       },
 
       onSettingPress: function () {
-        this.navTo("routeSetting");
+        this.navToW("routeSetting");
       },
 
       onTypesModelCtxChange: function (oEvent) {
@@ -68,7 +68,7 @@ sap.ui.define(
           text: text
         };
         if (
-          this.getModel("view").getProperty("/settings/use_remote_odata") &&
+          this.getModel("view").getProperty("/settings/use_remote_data") &&
           this.getModel("view").getProperty(
             "/state/remoteEventHandlerRegistered"
           )
@@ -131,7 +131,7 @@ sap.ui.define(
           timestamp: new Date()
         };
         if (
-          this.getModel("view").getProperty("/settings/use_remote_odata") &&
+          this.getModel("view").getProperty("/settings/use_remote_data") &&
           this.getModel("view").getProperty(
             "/state/remoteEventHandlerRegistered"
           )
@@ -188,7 +188,7 @@ sap.ui.define(
       },
 
       onPushAllData: function () {
-        if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+        if (this.getModel("view").getProperty("/settings/use_remote_data")) {
           const data = {
             name: "pushAllData",
             value: JSON.stringify({
@@ -208,7 +208,7 @@ sap.ui.define(
       },
 
       onPullAllData: function () {
-        if (this.getModel("view").getProperty("/settings/use_remote_odata")) {
+        if (this.getModel("view").getProperty("/settings/use_remote_data")) {
           this.getModel().read("/AllDatas", {
             success: (d) => {
               const { CheckInTypes, TypedCheckIns } = JSON.parse(

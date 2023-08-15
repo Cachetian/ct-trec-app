@@ -12,7 +12,10 @@
                     icon="sap-icon://home"
                     press="onHomePress"
                 />
-                <Switch state="{view>/settings/use_remote_odata}" />
+                <Switch
+                    state="{view>/settings/use_remote_data}"
+                    change="onUseRemoteDataSwitchChange"
+                />
             </OverflowToolbar>
         </headerContent>
         <Panel
@@ -88,12 +91,12 @@
                         <Button
                             text="Push"
                             press="onPushAllData"
-                            enabled="{view>/settings/use_remote_odata}"
+                            enabled="{view>/settings/use_remote_data}"
                         />
                         <Button
                             text="Pull"
                             press="onPullAllData"
-                            enabled="{view>/settings/use_remote_odata}"
+                            enabled="{view>/settings/use_remote_data}"
                         />
                     </HBox>
                 </OverflowToolbar>
