@@ -33,8 +33,8 @@ entity CheckInTypes {
 
 // technical entity for many to many impl
 entity TypeScenarioAssigments {
-  key scenarios : Association to one CheckInScenarios;
-  key types     : Association to one CheckInTypes;
+  key scenario : Association to one CheckInScenarios;
+  key types    : Association to one CheckInTypes;
 }
 
 
@@ -45,7 +45,7 @@ entity CheckInScenarios {
   key ID       : Integer;
       text     : String;
       types    : Association to many TypeScenarioAssigments
-                   on types.scenarios = $self;
+                   on types.scenario = $self;
       checkIns : Association to many CheckInScenarioAssigments
-                   on types.scenarios = $self;
+                   on checkIns.scenario = $self;
 }
