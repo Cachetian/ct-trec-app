@@ -54,11 +54,13 @@ sap.ui.define(
         }
         const toolbar = oEvent.getSource();
         // lasy
-        setTimeout(() => {
+        const handleReqComp = () => {
+          this.getOwnerComponent().getModel().detachRequestCompleted(handleReqComp);
           if (toolbar.indexOfContent(this._title) < 0) {
             toolbar.insertContent(this._title, 0);
           }
-        }, 200)
+        }
+        this.getOwnerComponent().getModel().attachRequestCompleted(handleReqComp, this);
       },
 
       onTypedCheckIn: function (oEvent) {
