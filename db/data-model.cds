@@ -1,34 +1,10 @@
+/**
+ * Core domain models for ct-trec time recording app
+ */
 namespace ct.trec.db;
 
 /**
- * Scenarios
- */
-entity CheckInScenarios {
-  key ID       : Integer;
-      text     : String;
-      types    : Association to many TypeScenarioAssigments
-                   on types.scenarios = $self;
-      checkIns : Association to many CheckInScenarioAssigments
-                   on types.scenarios = $self;
-}
-
-/**
- * Types
- */
-entity CheckInTypes {
-  key ID        : Integer;
-      text      : String;
-      scenarios : Association to many TypeScenarioAssigments
-                    on scenarios.types = $self;
-}
-
-entity TypeScenarioAssigments {
-  key scenarios : Association to one CheckInScenarios;
-  key types     : Association to one CheckInTypes;
-}
-
-/**
- * Records
+ * 10 - Records, transaction data
  */
 entity TypedCheckIns {
   key ID        : Integer;
@@ -39,7 +15,37 @@ entity TypedCheckIns {
                     on scenarios.checkIn = $self;
 }
 
+// technical entity for many to many impl
 entity CheckInScenarioAssigments {
   key scenario : Association to one CheckInScenarios;
   key checkIn  : Association to one TypedCheckIns;
+}
+
+/**
+ * 20 - Types, master data
+ */
+entity CheckInTypes {
+  key ID        : Integer;
+      text      : String;
+      scenarios : Association to many TypeScenarioAssigments
+                    on scenarios.types = $self;
+}
+
+// technical entity for many to many impl
+entity TypeScenarioAssigments {
+  key scenarios : Association to one CheckInScenarios;
+  key types     : Association to one CheckInTypes;
+}
+
+
+/**
+ * 30 - Tags (Scenarios), master data
+ */
+entity CheckInScenarios {
+  key ID       : Integer;
+      text     : String;
+      types    : Association to many TypeScenarioAssigments
+                   on types.scenarios = $self;
+      checkIns : Association to many CheckInScenarioAssigments
+                   on types.scenarios = $self;
 }
