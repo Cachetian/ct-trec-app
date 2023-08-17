@@ -110,6 +110,46 @@
                 />
             </content>
         </Panel>
+        <List
+            id="scenariosList"
+            items="{csc>/scenarios}"
+            mode="Delete"
+            delete="onDeleteCheckInType"
+            updateFinished=".onScenarioUpdateFinished"
+        >
+            <headerToolbar>
+                <OverflowToolbar>
+                    <Title
+                        text="打卡场景 ({view>/scenarioCount})"
+                        width="8rem"
+                        class="sapUiSmallMarginBegin sapUiTinyMarginEnd"
+                    />
+                    <ToolbarSpacer />
+                    <Button
+                        icon="sap-icon://add"
+                        press="onNewCheckInScenario"
+                        type="Transparent"
+                    />
+                    <Button
+                        icon="sap-icon://edit"
+                        press="onEditCheckInTypes"
+                        type="Transparent"
+                        visible="{=!${view>/ui/checkInTypesEditable}}"
+                    />
+                    <Button
+                        icon="sap-icon://save"
+                        press="onEditCheckInTypes"
+                        type="Transparent"
+                        visible="{view>/ui/checkInTypesEditable}"
+                    />
+                </OverflowToolbar>
+            </headerToolbar>
+            <StandardListItem
+                title="{csc>text}"
+                type="Detail"
+                detailPress="onUpdateCheckInScenario"
+            />
+        </List>
         <HBox
             alignItems="Center"
             visible="{view>/ui/cmdPanelExpanded}"
@@ -158,8 +198,6 @@
                 detailPress="onUpdateCheckInType"
             />
         </List>
-
-        <VBox visible="{=!${view>/ui/checkInTypesEditable}}" />
         <footer>
             <Bar />
         </footer>
