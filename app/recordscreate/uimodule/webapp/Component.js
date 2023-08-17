@@ -31,6 +31,7 @@ sap.ui.define(
 
         // set the device model
         this.setModel(models.createDeviceModel(), "device");
+        this.setModel(models.createCheckScenariosModel(), "csc");
         this.setModel(models.createCheckTypesModel(), "ckt");
         this.setModel(models.createTypedCheckInModel(), "tci");
       },
