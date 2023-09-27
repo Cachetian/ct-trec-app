@@ -21,19 +21,6 @@
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
-  "cds": {
-    "requires": {
-      "db": {
-        "kind": "sqlite",
-        "credentials": {
-          "database": "db.sqlite"
-        }
-      },
-      "[production]": {
-        "db": "hana-cloud"
-      }
-    }
-  },
   "sapux": [
     "app/recordscreate/uimodule"
   ],
