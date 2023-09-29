@@ -12,7 +12,7 @@ sap.ui.define(
   function (Controller, JSONModel, Storage, UriParameters, eventQueue) {
     "use strict";
 
-    return Controller.extend("ct.trec.recordscreate.controller.OfflineCreate", {
+    return Controller.extend("ct.trec.recordscreate.controller.OnlineCreate", {
       onInit: function () {
         this.setModel(
           new JSONModel({
@@ -25,37 +25,81 @@ sap.ui.define(
               checkInTypesEditable: false,
               checkInItemsEditable: false
             },
-            state: {},
-            settings: {}
+            state: {
+              remoteEventHandlerRegistered: false
+            },
+            settings: {
+              // eslint-disable-next-line camelcase
+              use_remote_data: true
+            }
           }),
           "view"
         );
         this.getRouter()
-          .getRoute("offlineCreate")
+          .getRoute("onlineCreate")
           .attachMatched(this.handleQueryRouteMatched, this);
       },
 
+      handleQueryRouteMatched: function (oEvent) {
+        this.onUseRemoteDataChanged();
+        this.onRouteQueryChanged();
+      },
+
       /**
-       * Init model data once. (overwrited for offline only)
+       * Init model data once.
        */
       initModelDataOnce: function () {
         if (this.getOwnerComponent()._bTrecInited) {
           return;
         }
         // init
-        this.getOwnerComponent()._oStorage = new Storage(
-          Storage.Type.local,
-          "trec_all_data"
-        );
-
-        // use local data
-        const data = this._preProcessImport(
-          JSON.parse(this.getStore().get("stored_data"))
-        );
-        if (data) {
-          this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
-          this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
-        }
+        // use remote data
+        const oDataModel = this.getOwnerComponent().getModel();
+        oDataModel.metadataLoaded(true).then(() => {
+          oDataModel.read("/CheckInTypes", {
+            success: (d) => {
+              this.getModel("ckt").setProperty("/types", d.results);
+            }
+          });
+          oDataModel.read("/TypedCheckIns", {
+            success: (d) => {
+              this.getModel("tci").setProperty("/items", d.results);
+            }
+          });
+          eventQueue.register("complete", () => {
+            sap.m.MessageToast.show("success");
+          });
+          eventQueue.register("create-CheckInTypes", (data) => {
+            return new Promise((resolve, reject) => {
+              this.getModel().create("/CheckInTypes", data, {
+                success: () => {
+                  resolve();
+                },
+                error: (err) => {
+                  sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+                  reject();
+                }
+              });
+            });
+          });
+          eventQueue.register("create-TypedCheckIns", (data) => {
+            return new Promise((resolve, reject) => {
+              this.getModel().create("/TypedCheckIns", data, {
+                success: () => {
+                  resolve();
+                },
+                error: (err) => {
+                  sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+                  reject();
+                }
+              });
+            });
+          });
+          this.getModel("view").setProperty(
+            "/state/remoteEventHandlerRegistered",
+            true
+          );
+        });
         this.getOwnerComponent()._bTrecInited = true;
       },
 
@@ -68,34 +112,32 @@ sap.ui.define(
       },
 
       onTypesModelCtxChange: function (oEvent) {
-        if (!this._title) {
-          this._title = new sap.m.Label({
-            text: "记录 ({view>/itemsCount})"
-          });
-        }
-        const toolbar = oEvent.getSource();
-        // lasy
-        const handleReqComp = () => {
-          this.getOwnerComponent()
-            .getModel()
-            .detachRequestCompleted(handleReqComp);
-          if (toolbar.indexOfContent(this._title) < 0) {
-            toolbar.insertContent(this._title, 0);
-          }
-        };
-        this.getOwnerComponent()
-          .getModel()
-          .attachRequestCompleted(handleReqComp, this);
+        // if (!this._title) {
+        //   this._title = new sap.m.Label({
+        //     text: "记录 ({view>/itemsCount})"
+        //   });
+        // }
+        // const toolbar = oEvent.getSource();
+        // // lasy
+        // const handleReqComp = () => {
+        //   this.getOwnerComponent()
+        //     .getModel()
+        //     .detachRequestCompleted(handleReqComp);
+        //   if (toolbar.indexOfContent(this._title) < 0) {
+        //     toolbar.insertContent(this._title, 0);
+        //   }
+        // };
+        // this.getOwnerComponent()
+        //   .getModel()
+        //   .attachRequestCompleted(handleReqComp, this);
       },
 
       onTypedCheckIn: function (oEvent) {
         const data = {
-          ID: this.getModel("tci").getProperty("/items").length,
-          value: oEvent.getSource().getBindingContext("ckt").getObject().text,
+          value: oEvent.getSource().getBindingContext().getObject().text,
           timestamp: new Date()
         };
-        this.getModel("tci").getProperty("/items").push(data);
-        this.getModel("tci").refresh();
+        eventQueue.emit({ event: "create-TypedCheckIns", data: data });
       },
 
       onCheckInItemPress: function (oEvent) {
@@ -126,14 +168,15 @@ sap.ui.define(
       },
 
       onDeleteCheckInItem: function (oEvent) {
-        const array = this.getModel("tci").getProperty("/items");
-        const item = oEvent
-          .getParameter("listItem")
-          .getBindingContext("tci")
-          .getObject();
-        const index = array.indexOf(item);
-        array.splice(index, 1);
-        this.getModel("tci").setProperty("/items", array);
+        // Not implemented
+        // const array = this.getModel("tci").getProperty("/items");
+        // const item = oEvent
+        //   .getParameter("listItem")
+        //   .getBindingContext("tci")
+        //   .getObject();
+        // const index = array.indexOf(item);
+        // array.splice(index, 1);
+        // this.getModel("tci").setProperty("/items", array);
       },
 
       onTypesUpdateFinished: function (oEvent) {

@@ -1,0 +1,87 @@
+<mvc:View
+    controllerName="ct.trec.recordscreate.controller.OnlineCreate"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+>
+    <Page title="{i18n>title}">
+        <headerContent>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+            </OverflowToolbar>
+        </headerContent>
+        <VBox visible="{=!${view>/ui/checkInTypesEditable}}">
+            <Table
+                id="itemsList"
+                autoPopinMode="true"
+                mode="Delete"
+                delete="onDeleteCheckInItem"
+                updateFinished=".onItemsUpdateFinished"
+                growing="true"
+                growingThreshold="20"
+                items="{ 
+                        path: '/TypedCheckIns',
+                        sorter: {
+                            path: 'timestamp',
+                            descending: true,
+                            group: '.getItemsByDateGroup'
+                        },
+                        groupHeaderFactory: '.getItemsGroupByDateHeader'
+                    }"
+            >
+                <headerToolbar>
+                    <OverflowToolbar
+                        content="{/CheckInTypes}"
+                        modelContextChange="onTypesModelCtxChange"
+                    >
+                        <Button
+                            text="{text}"
+                            press="onTypedCheckIn"
+                        />
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column width="8rem">
+                        <Text text="动作" />
+                    </Column>
+                    <Column
+                        width="4rem"
+                        popinDisplay="WithoutHeader"
+                    >
+                        <Text text="时间" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem
+                        vAlign="Middle"
+                        type="Inactive"
+                    >
+                        <cells>
+                            <ObjectIdentifier
+                                title="{value}"
+                                titleActive="true"
+                                titlePress="onCheckInItemPress"
+                                text="{
+                                        path:'comment',
+                                        formatter : '.formatEmptyText'
+                                    }"
+                            />
+                            <TimePicker
+                                value="{
+                                        path:'timestamp',
+                                        type:'sap.ui.model.type.Time',
+                                        formatOptions: {
+                                            'pattern': 'HH:mm'
+                                        }
+                                    }"
+                            />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </VBox>
+        <footer>
+            <Bar />
+        </footer>
+    </Page>
+</mvc:View>
