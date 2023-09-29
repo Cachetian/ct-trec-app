@@ -9,7 +9,14 @@
     }
   },
   "requires": {
+    "db": {
+      "kind": "sqlite",
+      "credentials": {
+        "database": "db.sqlite"
+      }
+    },
     "[production]": {
+      "db": "hana-cloud",
       "auth": {
         "kind": "basic",
         "users": {

@@ -1,15 +1,19 @@
 const cds = require("@sap/cds");
-
+/**
+ * Record service, the default service, also memory db service
+ */
 class RecordService extends cds.ApplicationService {
   /** register custom handlers */
-  init() {
+  async init() {
     const LOG = cds.log("srv.record");
-    const { CheckInTypes, TypedCheckIns, AllDatas } = this.entities;
+    const { CheckInTypes, TypedCheckIns, Scenarios, AllDatas } = this.entities;
+    const PersistenceService = await cds.connect.to("PersistenceService");
     const memDB = {
       CheckInTypes: [{ ID: 0, text: "Do" }],
       TypedCheckIns: [
         { value: "Do", timestamp: new Date("2023-06-18T22:11:00.000Z") }
-      ]
+      ],
+      Scenarios: [{ ID: 0, text: "Day" }]
     };
 
     this.on("CREATE", CheckInTypes, (req) => {

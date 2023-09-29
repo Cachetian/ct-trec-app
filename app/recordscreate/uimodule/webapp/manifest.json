@@ -91,6 +91,20 @@
           ]
         },
         {
+          "name": "offlineCreate",
+          "pattern": "offline:?query:",
+          "target": [
+            "offlineCreateTarget"
+          ]
+        },
+        {
+          "name": "onlineCreate",
+          "pattern": "online:?query:",
+          "target": [
+            "onlineCreateTarget"
+          ]
+        },
+        {
           "name": "routeSetting",
           "pattern": "setting:?query:",
           "target": [
@@ -112,6 +126,20 @@
           "clearControlAggregation": false,
           "viewId": "mainView",
           "viewName": "Main"
+        },
+        "offlineCreateTarget": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "offlineCreate",
+          "viewName": "OfflineCreate"
+        },
+        "onlineCreateTarget": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "onlineCreate",
+          "viewName": "OnlineCreate"
         },
         "targetSetting": {
           "viewType": "XML",

@@ -19,9 +19,9 @@ modules:
           target-path: resources/
   - name: cttrecrecordscreate
     type: html5
-    path: recordscreate/uimodule
+    path: recordscreate
     build-parameters:
-      build-result: dist
+      build-result: uimodule/dist
       builder: custom
       commands:
         - npm install

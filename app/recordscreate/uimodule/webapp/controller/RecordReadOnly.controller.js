@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "./BaseController",
+    "../core/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/util/Storage",
     "sap/base/util/UriParameters",
@@ -24,12 +24,12 @@ sap.ui.define(
               },
               settings: {
                 // eslint-disable-next-line camelcase
-                use_remote_odata: false
+                use_remote_data: false
               }
             }),
             "view"
           );
-          this.initModelData();
+          this.getRouter().getRoute("routeRecordReadOnly").attachMatched(this.handleQueryRouteMatched, this);
         },
 
         onItemsUpdateFinished: function (oEvent) {

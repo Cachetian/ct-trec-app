@@ -12,7 +12,7 @@ sap.ui.define(
   function (Controller, JSONModel, Storage, UriParameters, eventQueue) {
     "use strict";
 
-    return Controller.extend("ct.trec.recordscreate.controller.Main", {
+    return Controller.extend("ct.trec.recordscreate.controller.OfflineCreate", {
       onInit: function () {
         this.setModel(
           new JSONModel({
@@ -25,17 +25,38 @@ sap.ui.define(
               checkInTypesEditable: false,
               checkInItemsEditable: false
             },
-            state: {
-              remoteEventHandlerRegistered: false
-            },
-            settings: {
-              // eslint-disable-next-line camelcase
-              use_remote_data: false
-            }
+            state: {},
+            settings: {}
           }),
           "view"
         );
-        this.getRouter().getRoute("routeMain").attachMatched(this.handleQueryRouteMatched, this);
+        this.getRouter()
+          .getRoute("offlineCreate")
+          .attachMatched(this.handleQueryRouteMatched, this);
+      },
+
+      /**
+       * Init model data once. (overwrited for offline only)
+       */
+      initModelDataOnce: function () {
+        if (this.getOwnerComponent()._bTrecInited) {
+          return;
+        }
+        // init
+        this.getOwnerComponent()._oStorage = new Storage(
+          Storage.Type.local,
+          "trec_all_data"
+        );
+
+        // use local data
+        const data = this._preProcessImport(
+          JSON.parse(this.getStore().get("stored_data"))
+        );
+        if (data) {
+          this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
+          this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
+        }
+        this.getOwnerComponent()._bTrecInited = true;
       },
 
       onRecordPress: function () {
@@ -55,12 +76,16 @@ sap.ui.define(
         const toolbar = oEvent.getSource();
         // lasy
         const handleReqComp = () => {
-          this.getOwnerComponent().getModel().detachRequestCompleted(handleReqComp);
+          this.getOwnerComponent()
+            .getModel()
+            .detachRequestCompleted(handleReqComp);
           if (toolbar.indexOfContent(this._title) < 0) {
             toolbar.insertContent(this._title, 0);
           }
-        }
-        this.getOwnerComponent().getModel().attachRequestCompleted(handleReqComp, this);
+        };
+        this.getOwnerComponent()
+          .getModel()
+          .attachRequestCompleted(handleReqComp, this);
       },
 
       onTypedCheckIn: function (oEvent) {
@@ -69,14 +94,6 @@ sap.ui.define(
           value: oEvent.getSource().getBindingContext("ckt").getObject().text,
           timestamp: new Date()
         };
-        if (
-          this.getModel("view").getProperty("/settings/use_remote_data") &&
-          this.getModel("view").getProperty(
-            "/state/remoteEventHandlerRegistered"
-          )
-        ) {
-          eventQueue.emit({ event: "create-TypedCheckIns", data: data });
-        }
         this.getModel("tci").getProperty("/items").push(data);
         this.getModel("tci").refresh();
       },

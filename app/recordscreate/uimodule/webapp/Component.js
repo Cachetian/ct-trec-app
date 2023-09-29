@@ -26,10 +26,12 @@ sap.ui.define(
         UIComponent.prototype.init.apply(this, arguments);
 
         // enable routing
+        this._oRouterLastQueryArgs = {};
         this.getRouter().initialize();
 
         // set the device model
         this.setModel(models.createDeviceModel(), "device");
+        this.setModel(models.createCheckScenariosModel(), "csc");
         this.setModel(models.createCheckTypesModel(), "ckt");
         this.setModel(models.createTypedCheckInModel(), "tci");
       },
