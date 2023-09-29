@@ -133,11 +133,17 @@ sap.ui.define(
       },
 
       onTypedCheckIn: function (oEvent) {
-        const data = {
-          value: oEvent.getSource().getBindingContext().getObject().text,
-          timestamp: new Date()
-        };
-        eventQueue.emit({ event: "create-TypedCheckIns", data: data });
+        let text = oEvent.getSource().getBindingContext().getObject().text;
+        this.getModel().read("/TypedCheckIns/$count", {
+          success: (count) => {
+            const data = {
+              ID: parseInt(count) + 1,
+              value: text,
+              timestamp: new Date()
+            };
+            eventQueue.emit({ event: "create-TypedCheckIns", data: data });
+          }
+        });
       },
 
       onCheckInItemPress: function (oEvent) {

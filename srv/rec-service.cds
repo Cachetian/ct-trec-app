@@ -9,12 +9,6 @@ service RecordService {
   entity TypedCheckIns as projection on db.TypedCheckIns;
   entity Scenarios     as projection on db.CheckInScenarios;
 
-  @cds.redirection.target
-  entity Items         as projection on db.TypedCheckIns;
-
-  @cds.redirection.target
-  entity Types         as projection on db.CheckInTypes;
-
   @cds.persistence.exists
   entity AllDatas {
     key name  : String;
