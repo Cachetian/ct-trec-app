@@ -4,5 +4,5 @@ namespace ct.trec.db.user;
 
 entity UserDatas {
   key ID   : String(255);
-      data : LargeBinary;
+      data : LargeString;
 }

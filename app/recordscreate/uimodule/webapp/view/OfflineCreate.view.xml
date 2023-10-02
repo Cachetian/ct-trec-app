@@ -8,6 +8,18 @@
         <headerContent>
             <OverflowToolbar>
                 <ToolbarSpacer />
+                <Button
+                    text="Push"
+                    press="onPushAllDataToUserDataStore"
+                />
+                <Button
+                    text="Pull"
+                    press="onPullAllDataFromUserDataStore"
+                />
+                <Button
+                    text="Remove"
+                    press="onRemoveUserDataStore"
+                />
             </OverflowToolbar>
         </headerContent>
         <VBox visible="{=!${view>/ui/checkInTypesEditable}}">

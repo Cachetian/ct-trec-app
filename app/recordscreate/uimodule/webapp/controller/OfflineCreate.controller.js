@@ -3,13 +3,12 @@ sap.ui.define(
     "../core/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/util/Storage",
-    "sap/base/util/UriParameters",
-    "../core/eventQueue"
+    "sap/m/MessageBox",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, JSONModel, Storage, UriParameters, eventQueue) {
+  function (Controller, JSONModel, Storage, MessageBox) {
     "use strict";
 
     return Controller.extend("ct.trec.recordscreate.controller.OfflineCreate", {
@@ -23,10 +22,10 @@ sap.ui.define(
             ui: {
               cmdPanelExpanded: false,
               checkInTypesEditable: false,
-              checkInItemsEditable: false
+              checkInItemsEditable: false,
             },
             state: {},
-            settings: {}
+            settings: {},
           }),
           "view"
         );
@@ -70,7 +69,7 @@ sap.ui.define(
       onTypesModelCtxChange: function (oEvent) {
         if (!this._title) {
           this._title = new sap.m.Label({
-            text: "记录 ({view>/itemsCount})"
+            text: "记录 ({view>/itemsCount})",
           });
         }
         const toolbar = oEvent.getSource();
@@ -92,7 +91,7 @@ sap.ui.define(
         const data = {
           ID: this.getModel("tci").getProperty("/items").length,
           value: oEvent.getSource().getBindingContext("ckt").getObject().text,
-          timestamp: new Date()
+          timestamp: new Date(),
         };
         this.getModel("tci").getProperty("/items").push(data);
         this.getModel("tci").refresh();
@@ -106,14 +105,14 @@ sap.ui.define(
             content: [
               new sap.m.Input({
                 value: "{tci>comment}",
-                placeholder: "备注"
-              })
+                placeholder: "备注",
+              }),
             ],
             endButton: new sap.m.Button({
               icon: "sap-icon://decline",
-              press: () => this._dialog.close()
+              press: () => this._dialog.close(),
             }),
-            afterClose: () => this._dialog.unbindElement()
+            afterClose: () => this._dialog.unbindElement(),
           });
           this._dialog.addStyleClass(
             "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader"
@@ -136,6 +135,68 @@ sap.ui.define(
         this.getModel("tci").setProperty("/items", array);
       },
 
+      onPushAllDataToUserDataStore: function () {
+        const data = {
+          data: btoa(
+            JSON.stringify({
+              CheckInTypes: this.getModel("ckt").getData().types,
+              TypedCheckIns: this.getModel("tci").getData().items,
+            })
+          ),
+        };
+        this.getModel().create("/UserDatas", data, {
+          success: () => {
+            sap.m.MessageToast.show("success");
+          },
+          error: (err) => {
+            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+          },
+        });
+      },
+
+      onPullAllDataFromUserDataStore: function () {
+        this.getModel().read("/UserDatas", {
+          success: (d) => {
+            if (d.results.length === 0) {
+              sap.m.MessageToast.show(`Not found`);
+              return;
+            }
+            const { CheckInTypes, TypedCheckIns } = JSON.parse(
+              atob(d.results[0].data)
+            );
+            const data = this._preProcessImport({
+              CheckInTypes: { types: CheckInTypes },
+              TypedCheckIns: { items: TypedCheckIns },
+            });
+            let recordsCount = data.TypedCheckIns.items.length;
+            MessageBox.confirm("Found " + recordsCount + ", Sure?", {
+              actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+              emphasizedAction: MessageBox.Action.OK,
+              onClose: function (sAction) {
+                if (sAction === MessageBox.Action.OK) {
+                  this.getModel("ckt").setData(data.CheckInTypes);
+                  this.getModel("tci").setData(data.TypedCheckIns);
+                }
+              }.bind(this),
+            });
+          },
+          error: (err) => {
+            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+          },
+        });
+      },
+
+      onRemoveUserDataStore: function () {
+        this.getModel().remove("/UserDatas('0')", {
+          success: () => {
+            sap.m.MessageToast.show("success");
+          },
+          error: (err) => {
+            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+          },
+        });
+      },
+
       onTypesUpdateFinished: function (oEvent) {
         // update the master list object counter after new data is loaded
         this._updateTypesCount(oEvent.getParameter("total"));
@@ -153,7 +214,7 @@ sap.ui.define(
       getItemsGroupByDateHeader: function (oGroup) {
         return new sap.m.GroupHeaderListItem({
           title: oGroup.key,
-          upperCase: false
+          upperCase: false,
         });
       },
 
@@ -173,7 +234,7 @@ sap.ui.define(
 
       formatEmptyText: function (sText) {
         return sText ? sText : "No comment";
-      }
+      },
     });
   }
 );
