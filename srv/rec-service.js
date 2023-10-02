@@ -75,7 +75,8 @@ class RecordService extends cds.ApplicationService {
         .update(clientIP + userAgent)
         .digest("hex");
       LOG.info("Read user data with ID: ", ID);
-      req.data.ID = ID;
+      // req.data.ID = ID;
+      req.query.SELECT.from.ref[0].where[2].val = ID;
     });
 
     this.on("CREATE", UserDatas, async (req) => {

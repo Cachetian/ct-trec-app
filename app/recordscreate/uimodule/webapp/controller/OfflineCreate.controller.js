@@ -155,15 +155,9 @@ sap.ui.define(
       },
 
       onPullAllDataFromUserDataStore: function () {
-        this.getModel().read("/UserDatas", {
+        this.getModel().read("/UserDatas('0')", {
           success: (d) => {
-            if (d.results.length === 0) {
-              sap.m.MessageToast.show(`Not found`);
-              return;
-            }
-            const { CheckInTypes, TypedCheckIns } = JSON.parse(
-              atob(d.results[0].data)
-            );
+            const { CheckInTypes, TypedCheckIns } = JSON.parse(atob(d.data));
             const data = this._preProcessImport({
               CheckInTypes: { types: CheckInTypes },
               TypedCheckIns: { items: TypedCheckIns },
@@ -181,6 +175,10 @@ sap.ui.define(
             });
           },
           error: (err) => {
+            if (err.statusCode === "404") {
+              sap.m.MessageToast.show(`Not found`);
+              return;
+            }
             sap.m.MessageToast.show(`failed with msg: ${err.message}`);
           },
         });
