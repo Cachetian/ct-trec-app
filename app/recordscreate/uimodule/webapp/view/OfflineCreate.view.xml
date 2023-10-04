@@ -8,6 +8,10 @@
         <headerContent>
             <OverflowToolbar>
                 <ToolbarSpacer />
+                 <Button
+                    text="Import JSON"
+                    press="onImportDataFromJson"
+                />
                 <Button
                     text="Get ID"
                     press="onGetDeviceId"
