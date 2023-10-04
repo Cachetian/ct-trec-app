@@ -1,6 +1,7 @@
 sap.ui.define(
   [
     "../core/BaseController",
+    "sap/base/util/Deferred",
     "sap/ui/model/json/JSONModel",
     "sap/ui/util/Storage",
     "sap/m/MessageBox",
@@ -8,7 +9,7 @@ sap.ui.define(
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, JSONModel, Storage, MessageBox) {
+  function (Controller, Deferred, JSONModel, Storage, MessageBox) {
     "use strict";
 
     return Controller.extend("ct.trec.recordscreate.controller.OfflineCreate", {
@@ -34,6 +35,10 @@ sap.ui.define(
           .attachMatched(this.handleQueryRouteMatched, this);
       },
 
+      handleQueryRouteMatched: function (oEvent) {
+        this.initModelDataOnce();
+      },
+
       /**
        * Init model data once. (overwrited for offline only)
        */
@@ -55,6 +60,8 @@ sap.ui.define(
           this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
           this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
         }
+        // this.byId("itemsList").getHeaderToolbar().fireModelContextChange();
+        // this.onTypesModelCtxChange();
         this.getOwnerComponent()._bTrecInited = true;
       },
 
@@ -85,6 +92,11 @@ sap.ui.define(
         this.getOwnerComponent()
           .getModel()
           .attachRequestCompleted(handleReqComp, this);
+        let deferred = new Deferred();
+        deferred.promise.then(handleReqComp);
+        setTimeout(() => {
+          deferred.resolve();
+        }, 200);
       },
 
       onTypedCheckIn: function (oEvent) {
