@@ -123,6 +123,16 @@ class RecordService extends cds.ApplicationService {
       return "200";
     });
 
+    this.on("getDeviceId", (req) => {
+      let clientIP = req.res.socket.remoteAddress;
+      let userAgent = req.headers["user-agent"];
+      let ID = crypto
+        .createHash("md5")
+        .update(clientIP + userAgent)
+        .digest("hex");
+      return ID;
+    });
+
     LOG.info("record service initialized");
 
     this.emit("restoreData");

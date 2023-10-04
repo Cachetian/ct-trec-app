@@ -9,6 +9,10 @@
             <OverflowToolbar>
                 <ToolbarSpacer />
                 <Button
+                    text="Get ID"
+                    press="onGetDeviceId"
+                />
+                <Button
                     text="Push"
                     press="onPushAllDataToUserDataStore"
                 />
@@ -28,7 +32,7 @@
                 autoPopinMode="true"
                 mode="Delete"
                 delete="onDeleteCheckInItem"
-                updateFinished=".onItemsUpdateFinished"
+                updateFinished="onItemsUpdateFinished"
                 growing="true"
                 growingThreshold="20"
                 items="{ 

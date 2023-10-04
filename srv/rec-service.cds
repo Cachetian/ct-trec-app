@@ -14,7 +14,8 @@ service RecordService {
         value : String;
   }
 
-  action restoreData() returns String;
-  action saveAllData() returns String;
-  action hello()       returns String;
+  action   restoreData() returns String;
+  action   saveAllData() returns String;
+  action   hello()       returns String;
+  function getDeviceId() returns String;
 }

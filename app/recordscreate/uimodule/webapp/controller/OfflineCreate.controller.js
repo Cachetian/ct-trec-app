@@ -60,8 +60,6 @@ sap.ui.define(
           this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
           this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
         }
-        // this.byId("itemsList").getHeaderToolbar().fireModelContextChange();
-        // this.onTypesModelCtxChange();
         this.getOwnerComponent()._bTrecInited = true;
       },
 
@@ -107,6 +105,7 @@ sap.ui.define(
         };
         this.getModel("tci").getProperty("/items").push(data);
         this.getModel("tci").refresh();
+        this._saveAllDataToStore();
       },
 
       onCheckInItemPress: function (oEvent) {
@@ -145,6 +144,15 @@ sap.ui.define(
         const index = array.indexOf(item);
         array.splice(index, 1);
         this.getModel("tci").setProperty("/items", array);
+        this._saveAllDataToStore();
+      },
+
+      onGetDeviceId: function () {
+        this.getModel().read("/getDeviceId()", {
+          success: function (d) {
+            sap.m.MessageToast.show("ID: " + d.getDeviceId);
+          },
+        });
       },
 
       onPushAllDataToUserDataStore: function () {
@@ -215,6 +223,7 @@ sap.ui.define(
       onItemsUpdateFinished: function (oEvent) {
         // update the master list object counter after new data is loaded
         this._updateItemsCount(oEvent.getParameter("total"));
+        this._saveAllDataToStore();
       },
 
       getItemsByDateGroup: function (oContext) {
@@ -240,6 +249,14 @@ sap.ui.define(
         if (this.byId("itemsList").getBinding("items").isLengthFinal()) {
           this.getModel("view").setProperty("/itemsCount", iTotalItems);
         }
+      },
+
+      _saveAllDataToStore: function () {
+        const data = JSON.stringify({
+          CheckInTypes: this.getModel("ckt").getData(),
+          TypedCheckIns: this.getModel("tci").getData(),
+        });
+        this.getStore().put("stored_data", data);
       },
 
       formatEmptyText: function (sText) {
