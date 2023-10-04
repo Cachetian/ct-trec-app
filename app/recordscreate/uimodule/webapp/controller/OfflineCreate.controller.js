@@ -4,7 +4,7 @@ sap.ui.define(
     "sap/base/util/Deferred",
     "sap/ui/model/json/JSONModel",
     "sap/ui/util/Storage",
-    "sap/m/MessageBox",
+    "sap/m/MessageBox"
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -23,10 +23,10 @@ sap.ui.define(
             ui: {
               cmdPanelExpanded: false,
               checkInTypesEditable: false,
-              checkInItemsEditable: false,
+              checkInItemsEditable: false
             },
             state: {},
-            settings: {},
+            settings: {}
           }),
           "view"
         );
@@ -74,7 +74,7 @@ sap.ui.define(
       onTypesModelCtxChange: function (oEvent) {
         if (!this._title) {
           this._title = new sap.m.Label({
-            text: "记录 ({view>/itemsCount})",
+            text: "记录 ({view>/itemsCount})"
           });
         }
         const toolbar = oEvent.getSource();
@@ -101,7 +101,7 @@ sap.ui.define(
         const data = {
           ID: this.getModel("tci").getProperty("/items").length,
           value: oEvent.getSource().getBindingContext("ckt").getObject().text,
-          timestamp: new Date(),
+          timestamp: new Date()
         };
         this.getModel("tci").getProperty("/items").push(data);
         this.getModel("tci").refresh();
@@ -116,14 +116,14 @@ sap.ui.define(
             content: [
               new sap.m.Input({
                 value: "{tci>comment}",
-                placeholder: "备注",
-              }),
+                placeholder: "备注"
+              })
             ],
             endButton: new sap.m.Button({
               icon: "sap-icon://decline",
-              press: () => this._dialog.close(),
+              press: () => this._dialog.close()
             }),
-            afterClose: () => this._dialog.unbindElement(),
+            afterClose: () => this._dialog.unbindElement()
           });
           this._dialog.addStyleClass(
             "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader"
@@ -147,11 +147,44 @@ sap.ui.define(
         this._saveAllDataToStore();
       },
 
+      onImportDataFromJson: function () {
+        let ta = new sap.m.TextArea({
+          width: "100%",
+          growing: true
+        });
+        let d = new sap.m.Dialog({
+          stretch: true,
+          content: [ta],
+          afterClose: () => {
+            d.destroy();
+          },
+          buttons: [
+            new sap.m.Button({
+              text: "Confirm",
+              type: sap.m.ButtonType.Emphasized,
+              press: () => {
+                const data = this._preProcessImport(JSON.parse(ta.getValue()));
+                this.getModel("ckt").setData(data.CheckInTypes);
+                this.getModel("tci").setData(data.TypedCheckIns);
+                d.close();
+              }
+            }),
+            new sap.m.Button({
+              text: "Cancel",
+              press: () => {
+                d.close();
+              }
+            })
+          ]
+        });
+        d.open();
+      },
+
       onGetDeviceId: function () {
         this.getModel().read("/getDeviceId()", {
           success: function (d) {
             sap.m.MessageToast.show("ID: " + d.getDeviceId);
-          },
+          }
         });
       },
 
@@ -160,9 +193,9 @@ sap.ui.define(
           data: btoa(
             JSON.stringify({
               CheckInTypes: this.getModel("ckt").getData().types,
-              TypedCheckIns: this.getModel("tci").getData().items,
+              TypedCheckIns: this.getModel("tci").getData().items
             })
-          ),
+          )
         };
         this.getModel().create("/UserDatas", data, {
           success: () => {
@@ -170,7 +203,7 @@ sap.ui.define(
           },
           error: (err) => {
             sap.m.MessageToast.show(`failed with msg: ${err.message}`);
-          },
+          }
         });
       },
 
@@ -180,7 +213,7 @@ sap.ui.define(
             const { CheckInTypes, TypedCheckIns } = JSON.parse(atob(d.data));
             const data = this._preProcessImport({
               CheckInTypes: { types: CheckInTypes },
-              TypedCheckIns: { items: TypedCheckIns },
+              TypedCheckIns: { items: TypedCheckIns }
             });
             let recordsCount = data.TypedCheckIns.items.length;
             MessageBox.confirm("Found " + recordsCount + ", Sure?", {
@@ -191,7 +224,7 @@ sap.ui.define(
                   this.getModel("ckt").setData(data.CheckInTypes);
                   this.getModel("tci").setData(data.TypedCheckIns);
                 }
-              }.bind(this),
+              }.bind(this)
             });
           },
           error: (err) => {
@@ -200,7 +233,7 @@ sap.ui.define(
               return;
             }
             sap.m.MessageToast.show(`failed with msg: ${err.message}`);
-          },
+          }
         });
       },
 
@@ -211,7 +244,7 @@ sap.ui.define(
           },
           error: (err) => {
             sap.m.MessageToast.show(`failed with msg: ${err.message}`);
-          },
+          }
         });
       },
 
@@ -233,7 +266,7 @@ sap.ui.define(
       getItemsGroupByDateHeader: function (oGroup) {
         return new sap.m.GroupHeaderListItem({
           title: oGroup.key,
-          upperCase: false,
+          upperCase: false
         });
       },
 
@@ -254,14 +287,14 @@ sap.ui.define(
       _saveAllDataToStore: function () {
         const data = JSON.stringify({
           CheckInTypes: this.getModel("ckt").getData(),
-          TypedCheckIns: this.getModel("tci").getData(),
+          TypedCheckIns: this.getModel("tci").getData()
         });
         this.getStore().put("stored_data", data);
       },
 
       formatEmptyText: function (sText) {
         return sText ? sText : "No comment";
-      },
+      }
     });
   }
 );
