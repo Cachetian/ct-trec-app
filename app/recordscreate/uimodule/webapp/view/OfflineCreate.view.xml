@@ -8,6 +8,26 @@
         <headerContent>
             <OverflowToolbar>
                 <ToolbarSpacer />
+                 <Button
+                    text="Import JSON"
+                    press="onImportDataFromJson"
+                />
+                <Button
+                    text="Get ID"
+                    press="onGetDeviceId"
+                />
+                <Button
+                    text="Push"
+                    press="onPushAllDataToUserDataStore"
+                />
+                <Button
+                    text="Pull"
+                    press="onPullAllDataFromUserDataStore"
+                />
+                <Button
+                    text="Remove"
+                    press="onRemoveUserDataStore"
+                />
             </OverflowToolbar>
         </headerContent>
         <VBox visible="{=!${view>/ui/checkInTypesEditable}}">
@@ -16,7 +36,7 @@
                 autoPopinMode="true"
                 mode="Delete"
                 delete="onDeleteCheckInItem"
-                updateFinished=".onItemsUpdateFinished"
+                updateFinished="onItemsUpdateFinished"
                 growing="true"
                 growingThreshold="20"
                 items="{ 

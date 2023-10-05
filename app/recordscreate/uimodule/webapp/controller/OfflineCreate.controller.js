@@ -1,15 +1,15 @@
 sap.ui.define(
   [
     "../core/BaseController",
+    "sap/base/util/Deferred",
     "sap/ui/model/json/JSONModel",
     "sap/ui/util/Storage",
-    "sap/base/util/UriParameters",
-    "../core/eventQueue"
+    "sap/m/MessageBox"
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, JSONModel, Storage, UriParameters, eventQueue) {
+  function (Controller, Deferred, JSONModel, Storage, MessageBox) {
     "use strict";
 
     return Controller.extend("ct.trec.recordscreate.controller.OfflineCreate", {
@@ -33,6 +33,10 @@ sap.ui.define(
         this.getRouter()
           .getRoute("offlineCreate")
           .attachMatched(this.handleQueryRouteMatched, this);
+      },
+
+      handleQueryRouteMatched: function (oEvent) {
+        this.initModelDataOnce();
       },
 
       /**
@@ -86,6 +90,11 @@ sap.ui.define(
         this.getOwnerComponent()
           .getModel()
           .attachRequestCompleted(handleReqComp, this);
+        let deferred = new Deferred();
+        deferred.promise.then(handleReqComp);
+        setTimeout(() => {
+          deferred.resolve();
+        }, 200);
       },
 
       onTypedCheckIn: function (oEvent) {
@@ -96,6 +105,7 @@ sap.ui.define(
         };
         this.getModel("tci").getProperty("/items").push(data);
         this.getModel("tci").refresh();
+        this._saveAllDataToStore();
       },
 
       onCheckInItemPress: function (oEvent) {
@@ -134,6 +144,108 @@ sap.ui.define(
         const index = array.indexOf(item);
         array.splice(index, 1);
         this.getModel("tci").setProperty("/items", array);
+        this._saveAllDataToStore();
+      },
+
+      onImportDataFromJson: function () {
+        let ta = new sap.m.TextArea({
+          width: "100%",
+          growing: true
+        });
+        let d = new sap.m.Dialog({
+          stretch: true,
+          content: [ta],
+          afterClose: () => {
+            d.destroy();
+          },
+          buttons: [
+            new sap.m.Button({
+              text: "Confirm",
+              type: sap.m.ButtonType.Emphasized,
+              press: () => {
+                const data = this._preProcessImport(JSON.parse(ta.getValue()));
+                this.getModel("ckt").setData(data.CheckInTypes);
+                this.getModel("tci").setData(data.TypedCheckIns);
+                d.close();
+              }
+            }),
+            new sap.m.Button({
+              text: "Cancel",
+              press: () => {
+                d.close();
+              }
+            })
+          ]
+        });
+        d.open();
+      },
+
+      onGetDeviceId: function () {
+        this.getModel().read("/getDeviceId()", {
+          success: function (d) {
+            sap.m.MessageToast.show("ID: " + d.getDeviceId);
+          }
+        });
+      },
+
+      onPushAllDataToUserDataStore: function () {
+        const data = {
+          data: btoa(
+            JSON.stringify({
+              CheckInTypes: this.getModel("ckt").getData().types,
+              TypedCheckIns: this.getModel("tci").getData().items
+            })
+          )
+        };
+        this.getModel().create("/UserDatas", data, {
+          success: () => {
+            sap.m.MessageToast.show("success");
+          },
+          error: (err) => {
+            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+          }
+        });
+      },
+
+      onPullAllDataFromUserDataStore: function () {
+        this.getModel().read("/UserDatas('0')", {
+          success: (d) => {
+            const { CheckInTypes, TypedCheckIns } = JSON.parse(atob(d.data));
+            const data = this._preProcessImport({
+              CheckInTypes: { types: CheckInTypes },
+              TypedCheckIns: { items: TypedCheckIns }
+            });
+            let recordsCount = data.TypedCheckIns.items.length;
+            MessageBox.confirm("Found " + recordsCount + ", Sure?", {
+              actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+              emphasizedAction: MessageBox.Action.OK,
+              onClose: function (sAction) {
+                if (sAction === MessageBox.Action.OK) {
+                  this.getModel("ckt").setData(data.CheckInTypes);
+                  this.getModel("tci").setData(data.TypedCheckIns);
+                }
+              }.bind(this)
+            });
+          },
+          error: (err) => {
+            if (err.statusCode === "404") {
+              sap.m.MessageToast.show(`Not found`);
+              return;
+            }
+            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+          }
+        });
+      },
+
+      onRemoveUserDataStore: function () {
+        this.getModel().remove("/UserDatas('0')", {
+          success: () => {
+            sap.m.MessageToast.show("success");
+          },
+          error: (err) => {
+            sap.m.MessageToast.show(`failed with msg: ${err.message}`);
+          }
+        });
       },
 
       onTypesUpdateFinished: function (oEvent) {
@@ -144,6 +256,7 @@ sap.ui.define(
       onItemsUpdateFinished: function (oEvent) {
         // update the master list object counter after new data is loaded
         this._updateItemsCount(oEvent.getParameter("total"));
+        this._saveAllDataToStore();
       },
 
       getItemsByDateGroup: function (oContext) {
@@ -169,6 +282,14 @@ sap.ui.define(
         if (this.byId("itemsList").getBinding("items").isLengthFinal()) {
           this.getModel("view").setProperty("/itemsCount", iTotalItems);
         }
+      },
+
+      _saveAllDataToStore: function () {
+        const data = JSON.stringify({
+          CheckInTypes: this.getModel("ckt").getData(),
+          TypedCheckIns: this.getModel("tci").getData()
+        });
+        this.getStore().put("stored_data", data);
       },
 
       formatEmptyText: function (sText) {

@@ -6,7 +6,7 @@ sap.ui.define(
     "ct/trec/recordscreate/model/formatter",
     "sap/ui/util/Storage",
     "sap/base/util/UriParameters",
-    "../core/eventQueue"
+    "../core/eventQueue",
   ],
   function (
     Controller,
@@ -66,13 +66,16 @@ sap.ui.define(
         },
 
         navToW: function (psTarget, pbReplace) {
-          const oQueryArgs = this.getOwnerComponent()._oRouterLastQueryArgs
+          const oQueryArgs = this.getOwnerComponent()._oRouterLastQueryArgs;
           if (oQueryArgs)
-            this.getRouter().navTo(psTarget, {
-              "?query": oQueryArgs
-            }, pbReplace);
-          else
-            this.getRouter().navTo(psTarget, {}, pbReplace);
+            this.getRouter().navTo(
+              psTarget,
+              {
+                "?query": oQueryArgs,
+              },
+              pbReplace
+            );
+          else this.getRouter().navTo(psTarget, {}, pbReplace);
         },
 
         getRouter: function () {
@@ -94,22 +97,33 @@ sap.ui.define(
         },
 
         handleQueryRouteMatched: function (oEvent) {
-          const routeChanged = (oEvent.getParameter("name") !== this.getOwnerComponent()._sRouterLastRoute);
+          const routeChanged =
+            oEvent.getParameter("name") !==
+            this.getOwnerComponent()._sRouterLastRoute;
           const oArguments = oEvent.getParameter("arguments");
           oArguments["?query"] = oArguments["?query"] || {
-            "use-remote-data": ""
+            "use-remote-data": "",
           };
 
-          let useRemoteDataChanged = false, useRemoteData = oArguments["?query"]["use-remote-data"];
+          let useRemoteDataChanged = false,
+            useRemoteData = oArguments["?query"]["use-remote-data"];
           if (!useRemoteData) useRemoteData = "";
           if (
             useRemoteData &&
-            (routeChanged || useRemoteData !== this.getOwnerComponent()._oRouterLastQueryArgs["use-remote-data"])
+            (routeChanged ||
+              useRemoteData !==
+                this.getOwnerComponent()._oRouterLastQueryArgs[
+                  "use-remote-data"
+                ])
           ) {
             useRemoteDataChanged = true;
-            this.getModel("view").setProperty("/settings/use_remote_data", useRemoteData === "true");
+            this.getModel("view").setProperty(
+              "/settings/use_remote_data",
+              useRemoteData === "true"
+            );
             this.onUseRemoteDataChanged();
-            this.getOwnerComponent()._oRouterLastQueryArgs["use-remote-data"] = useRemoteData;
+            this.getOwnerComponent()._oRouterLastQueryArgs["use-remote-data"] =
+              useRemoteData;
           }
 
           if (useRemoteDataChanged) {
@@ -117,11 +131,11 @@ sap.ui.define(
           }
 
           if (routeChanged)
-            this.getOwnerComponent()._sRouterLastRoute = oEvent.getParameter("name");
+            this.getOwnerComponent()._sRouterLastRoute =
+              oEvent.getParameter("name");
         },
 
-        onRouteQueryChanged: function () {
-        },
+        onRouteQueryChanged: function () {},
 
         onUseRemoteDataChanged: function () {
           this.initModelDataOnce();
@@ -146,12 +160,12 @@ sap.ui.define(
               oDataModel.read("/CheckInTypes", {
                 success: (d) => {
                   this.getModel("ckt").setProperty("/types", d.results);
-                }
+                },
               });
               oDataModel.read("/TypedCheckIns", {
                 success: (d) => {
                   this.getModel("tci").setProperty("/items", d.results);
-                }
+                },
               });
               eventQueue.register("complete", () => {
                 sap.m.MessageToast.show("success");
@@ -167,7 +181,7 @@ sap.ui.define(
                         `failed with msg: ${err.message}`
                       );
                       reject();
-                    }
+                    },
                   });
                 });
               });
@@ -182,7 +196,7 @@ sap.ui.define(
                         `failed with msg: ${err.message}`
                       );
                       reject();
-                    }
+                    },
                   });
                 });
               });
@@ -208,6 +222,11 @@ sap.ui.define(
           this.getOwnerComponent()._bTrecInited = true;
         },
 
+        /**
+         * add init timestamp to records.
+         * @param {*} data
+         * @returns
+         */
         _preProcessImport: function (data) {
           if (!data) {
             return;
@@ -219,7 +238,7 @@ sap.ui.define(
           }
 
           return data;
-        }
+        },
       }
     );
   }

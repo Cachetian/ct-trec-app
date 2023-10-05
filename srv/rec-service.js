@@ -1,4 +1,6 @@
 const cds = require("@sap/cds");
+const crypto = require("crypto");
+
 /**
  * Record service, the default service, also memory db service
  */
@@ -6,7 +8,8 @@ class RecordService extends cds.ApplicationService {
   /** register custom handlers */
   async init() {
     const LOG = cds.log("srv.record");
-    const { CheckInTypes, TypedCheckIns, Scenarios, AllDatas } = this.entities;
+    const { CheckInTypes, TypedCheckIns, Scenarios, AllDatas, UserDatas } =
+      this.entities;
     const PersistenceService = await cds.connect.to("PersistenceService");
     const memDB = {
       CheckInTypes: [{ ID: 0, text: "Do" }],
@@ -64,6 +67,43 @@ class RecordService extends cds.ApplicationService {
       };
     });
 
+    this.before("READ", UserDatas, async (req) => {
+      let clientIP = req.res.socket.remoteAddress;
+      let userAgent = req.headers["user-agent"];
+      let ID = crypto
+        .createHash("md5")
+        .update(clientIP + userAgent)
+        .digest("hex");
+      LOG.info("Read user data with ID: ", ID);
+      // req.data.ID = ID;
+      req.query.SELECT.from.ref[0].where[2].val = ID;
+    });
+
+    this.on("CREATE", UserDatas, async (req) => {
+      let clientIP = req.res.socket.remoteAddress;
+      let userAgent = req.headers["user-agent"];
+      let ID = crypto
+        .createHash("md5")
+        .update(clientIP + userAgent)
+        .digest("hex");
+      LOG.info("Push to user data with ID: ", ID);
+      req.data.ID = ID;
+      await UPSERT.into(UserDatas, req.data);
+      return req.data;
+    });
+
+    this.before("DELETE", UserDatas, async (req) => {
+      let clientIP = req.res.socket.remoteAddress;
+      let userAgent = req.headers["user-agent"];
+      let ID = crypto
+        .createHash("md5")
+        .update(clientIP + userAgent)
+        .digest("hex");
+      LOG.info("Remove user data with ID: ", ID);
+      // req.data.ID = ID;
+      req.query.DELETE.from.ref[0].where[2].val = ID;
+    });
+
     this.on("restoreData", async (req) => {
       LOG.info("restoring data from db");
       memDB.CheckInTypes = await SELECT.from(CheckInTypes);
@@ -81,6 +121,16 @@ class RecordService extends cds.ApplicationService {
     this.on("hello", async () => {
       LOG.info("hello");
       return "200";
+    });
+
+    this.on("getDeviceId", (req) => {
+      let clientIP = req.res.socket.remoteAddress;
+      let userAgent = req.headers["user-agent"];
+      let ID = crypto
+        .createHash("md5")
+        .update(clientIP + userAgent)
+        .digest("hex");
+      return ID;
     });
 
     LOG.info("record service initialized");
