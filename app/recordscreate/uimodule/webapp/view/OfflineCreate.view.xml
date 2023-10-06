@@ -65,16 +65,18 @@
                     }"
             >
                 <headerToolbar>
-                    <OverflowToolbar
-                        content="{ckt>/types}"
-                        modelContextChange="onTypesModelCtxChange"
-                    >
+                    <Toolbar>
+                        <Label text="记录 ({view>/itemsCount})" />
+                    </Toolbar>
+                </headerToolbar>
+                <infoToolbar>
+                    <OverflowToolbar content="{ckt>/types}">
                         <Button
                             text="{ckt>text}"
                             press="onTypedCheckIn"
                         />
                     </OverflowToolbar>
-                </headerToolbar>
+                </infoToolbar>
                 <columns>
                     <Column width="8rem">
                         <Text text="动作" />

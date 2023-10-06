@@ -67,32 +67,6 @@ sap.ui.define(
         this.navToW("routeSetting");
       },
 
-      onTypesModelCtxChange: function (oEvent) {
-        if (!this._title) {
-          this._title = new sap.m.Label({
-            text: "记录 ({view>/itemsCount})"
-          });
-        }
-        const toolbar = oEvent.getSource();
-        // lasy
-        const handleReqComp = () => {
-          this.getOwnerComponent()
-            .getModel()
-            .detachRequestCompleted(handleReqComp);
-          if (toolbar.indexOfContent(this._title) < 0) {
-            toolbar.insertContent(this._title, 0);
-          }
-        };
-        this.getOwnerComponent()
-          .getModel()
-          .attachRequestCompleted(handleReqComp, this);
-        let deferred = new Deferred();
-        deferred.promise.then(handleReqComp);
-        setTimeout(() => {
-          deferred.resolve();
-        }, 200);
-      },
-
       onTypedCheckIn: function (oEvent) {
         const data = {
           ID: this.getModel("tci").getProperty("/items").length,
@@ -167,10 +141,29 @@ sap.ui.define(
         let actionsListVb = new sap.m.VBox({
           items: [
             new sap.m.HBox({
-              items: [new sap.m.Input({ value: "{csc>text}" })]
+              alignItems: "Center",
+              items: [
+                new sap.m.Label({
+                  text: "Text",
+                  showColon: true,
+                  width: "3rem"
+                }),
+                new sap.m.Input({ value: "{csc>text}" })
+              ]
             }),
             new sap.m.List({
               mode: "Delete",
+              delete: (oEvent) => {
+                const ctx = actionsListVb.getBindingContext("csc");
+                const array = ctx.getProperty("actions");
+                const item = oEvent
+                  .getParameter("listItem")
+                  .getBindingContext("csc");
+                const index = array.indexOf(item);
+                array.splice(index, 1);
+                ctx.getModel().setProperty("actions", array);
+                ctx.getModel().refresh();
+              },
               headerToolbar: new sap.m.OverflowToolbar({
                 content: [
                   new sap.m.Title({ text: "actions" }),
@@ -252,6 +245,12 @@ sap.ui.define(
               text: "Confirm",
               type: sap.m.ButtonType.Emphasized,
               press: () => {
+                // copy to check in types
+                const actions = actionsListVb
+                  .getBindingContext("csc")
+                  .getProperty("actions");
+                this.getModel("ckt").setProperty("/types", actions);
+                this.getModel("ckt").refresh();
                 d.close();
               }
             }),
@@ -264,7 +263,7 @@ sap.ui.define(
           ]
         });
         d.addStyleClass(
-          "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--scenarioHeader"
+          "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader"
         );
         d.setModel(this.getModel("csc"), "csc");
         this.getView().addDependent(d);

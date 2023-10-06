@@ -20,7 +20,7 @@ sap.ui.define(
       createCheckScenariosModel: function () {
         const oModel = new JSONModel({
           new: { text: "" },
-          scenarios: [{ text: "日常", actions: [{ text: "做" }] }]
+          scenarios: [{ text: "", actions: [{ text: "" }] }]
         });
         oModel.setDefaultBindingMode("TwoWay");
         return oModel;
