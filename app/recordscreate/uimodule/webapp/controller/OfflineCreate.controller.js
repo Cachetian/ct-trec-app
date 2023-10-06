@@ -20,6 +20,7 @@ sap.ui.define(
             messageCount: 0,
             typesCount: 0,
             itemsCount: 0,
+            deviceId: "",
             ui: {},
             state: {},
             settings: {}
@@ -319,8 +320,9 @@ sap.ui.define(
       onGetDeviceId: function () {
         this.getModel().read("/getDeviceId()", {
           success: function (d) {
+            this.getModel("view").setProperty("/deviceId", d.getDeviceId);
             sap.m.MessageToast.show("ID: " + d.getDeviceId);
-          }
+          }.bind(this)
         });
       },
 

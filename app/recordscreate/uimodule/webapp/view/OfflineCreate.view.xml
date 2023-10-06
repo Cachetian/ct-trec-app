@@ -24,11 +24,11 @@
                     press="onScenarios"
                 />
                 <Button
-                    text="Import JSON"
+                    text="Import"
                     press="onImportDataFromJson"
                 />
                 <Button
-                    text="Get ID"
+                    text="ID {view>/deviceId}"
                     press="onGetDeviceId"
                 />
                 <Button
