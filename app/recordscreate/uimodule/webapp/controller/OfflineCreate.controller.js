@@ -53,9 +53,14 @@ sap.ui.define(
           JSON.parse(this.getStore().get("stored_data"))
         );
         if (data) {
-          this.getOwnerComponent().getModel("csc").setData(data.Scenarios);
-          this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
-          this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
+          if (data.Scenarios)
+            this.getOwnerComponent().getModel("csc").setData(data.Scenarios);
+          if (data.CheckInTypes)
+            this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
+          if (data.TypedCheckIns)
+            this.getOwnerComponent()
+              .getModel("tci")
+              .setData(data.TypedCheckIns);
         }
         this.getOwnerComponent()._bTrecInited = true;
       },
@@ -159,7 +164,8 @@ sap.ui.define(
                 const array = ctx.getProperty("actions");
                 const item = oEvent
                   .getParameter("listItem")
-                  .getBindingContext("csc");
+                  .getBindingContext("csc")
+                  .getObject();
                 const index = array.indexOf(item);
                 array.splice(index, 1);
                 ctx.getModel().setProperty("actions", array);
