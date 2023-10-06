@@ -303,6 +303,7 @@ sap.ui.define(
                 this.getModel("csc").setData(data.Scenarios);
                 this.getModel("ckt").setData(data.CheckInTypes);
                 this.getModel("tci").setData(data.TypedCheckIns);
+                this._saveAllDataToStore();
                 d.close();
               }
             }),
@@ -329,10 +330,13 @@ sap.ui.define(
       onPushAllDataToUserDataStore: function () {
         const data = {
           data: btoa(
-            JSON.stringify({
-              CheckInTypes: this.getModel("ckt").getData().types,
-              TypedCheckIns: this.getModel("tci").getData().items
-            })
+            encodeURIComponent(
+              JSON.stringify({
+                Scenarios: this.getModel("csc").getData().scenarios,
+                CheckInTypes: this.getModel("ckt").getData().types,
+                TypedCheckIns: this.getModel("tci").getData().items
+              })
+            )
           )
         };
         this.getModel().create("/UserDatas", data, {
@@ -348,7 +352,9 @@ sap.ui.define(
       onPullAllDataFromUserDataStore: function () {
         this.getModel().read("/UserDatas('0')", {
           success: (d) => {
-            const { CheckInTypes, TypedCheckIns } = JSON.parse(atob(d.data));
+            const { Scenarios, CheckInTypes, TypedCheckIns } = JSON.parse(
+              decodeURIComponent(atob(d.data))
+            );
             const data = this._preProcessImport({
               Scenarios: { scenarios: Scenarios },
               CheckInTypes: { types: CheckInTypes },
@@ -360,6 +366,7 @@ sap.ui.define(
               emphasizedAction: MessageBox.Action.OK,
               onClose: function (sAction) {
                 if (sAction === MessageBox.Action.OK) {
+                  this.getModel("csc").setData(data.Scenarios);
                   this.getModel("ckt").setData(data.CheckInTypes);
                   this.getModel("tci").setData(data.TypedCheckIns);
                 }
