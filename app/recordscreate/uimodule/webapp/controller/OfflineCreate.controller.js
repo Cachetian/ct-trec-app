@@ -182,8 +182,6 @@ sap.ui.define(
                       let actions = ctx.getProperty("actions");
                       let nextKey = "new" + actions.length;
                       actions.push({ text: nextKey });
-                      // ctx.setUpdated(true);
-                      // ctx.setForceRefresh(true);
                       ctx.getModel().refresh();
                     }
                   })
@@ -243,7 +241,7 @@ sap.ui.define(
         let d = new sap.m.Dialog({
           showHeader: false,
           stretch: true,
-          scenarioHeader: scenarioHeader,
+          subHeader: scenarioHeader,
           content: [actionsListVb],
           afterClose: () => {
             this.getView().removeDependent(d);
