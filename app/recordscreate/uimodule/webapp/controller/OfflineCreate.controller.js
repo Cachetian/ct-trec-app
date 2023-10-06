@@ -53,6 +53,7 @@ sap.ui.define(
           JSON.parse(this.getStore().get("stored_data"))
         );
         if (data) {
+          this.getOwnerComponent().getModel("csc").setData(data.Scenarios);
           this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
           this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
         }
@@ -239,6 +240,7 @@ sap.ui.define(
           afterClose: () => {
             this.getView().removeDependent(d);
             d.destroy();
+            this._saveAllDataToStore();
           },
           buttons: [
             new sap.m.Button({
@@ -291,6 +293,7 @@ sap.ui.define(
               type: sap.m.ButtonType.Emphasized,
               press: () => {
                 const data = this._preProcessImport(JSON.parse(ta.getValue()));
+                this.getModel("csc").setData(data.Scenarios);
                 this.getModel("ckt").setData(data.CheckInTypes);
                 this.getModel("tci").setData(data.TypedCheckIns);
                 d.close();
@@ -339,6 +342,7 @@ sap.ui.define(
           success: (d) => {
             const { CheckInTypes, TypedCheckIns } = JSON.parse(atob(d.data));
             const data = this._preProcessImport({
+              Scenarios: { scenarios: Scenarios },
               CheckInTypes: { types: CheckInTypes },
               TypedCheckIns: { items: TypedCheckIns }
             });
@@ -413,6 +417,7 @@ sap.ui.define(
 
       _saveAllDataToStore: function () {
         const data = JSON.stringify({
+          Scenarios: this.getModel("csc").getData(),
           CheckInTypes: this.getModel("ckt").getData(),
           TypedCheckIns: this.getModel("tci").getData()
         });
