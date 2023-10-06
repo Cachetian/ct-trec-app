@@ -20,11 +20,7 @@ sap.ui.define(
             messageCount: 0,
             typesCount: 0,
             itemsCount: 0,
-            ui: {
-              cmdPanelExpanded: false,
-              checkInTypesEditable: false,
-              checkInItemsEditable: false
-            },
+            ui: {},
             state: {},
             settings: {}
           }),
@@ -126,7 +122,7 @@ sap.ui.define(
             afterClose: () => this._dialog.unbindElement()
           });
           this._dialog.addStyleClass(
-            "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader"
+            "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--scenarioHeader"
           );
         }
         const dialog = this._dialog;
@@ -145,6 +141,140 @@ sap.ui.define(
         array.splice(index, 1);
         this.getModel("tci").setProperty("/items", array);
         this._saveAllDataToStore();
+      },
+
+      onScenarios: function () {
+        let scenariosSelect = new sap.m.Select({
+          selectedKey: "csc>/selectedKey",
+          items: {
+            path: "csc>/scenarios",
+            template: new sap.ui.core.Item({
+              key: "{csc>text}",
+              text: "{csc>text}"
+            }),
+            templateShareable: false
+          },
+          change: (oEvent) => {
+            actionsListVb.bindElement({
+              path: oEvent
+                .getParameter("selectedItem")
+                .getBindingContext("csc")
+                .getPath(),
+              model: "csc"
+            });
+          }
+        });
+        let actionsListVb = new sap.m.VBox({
+          items: [
+            new sap.m.HBox({
+              items: [new sap.m.Input({ value: "{csc>text}" })]
+            }),
+            new sap.m.List({
+              mode: "Delete",
+              headerToolbar: new sap.m.OverflowToolbar({
+                content: [
+                  new sap.m.Title({ text: "actions" }),
+                  new sap.m.ToolbarSpacer(),
+                  new sap.m.Button({
+                    text: "Add",
+                    press: function (oEvent) {
+                      let ctx = oEvent.getSource().getBindingContext("csc");
+                      let actions = ctx.getProperty("actions");
+                      let nextKey = "new" + actions.length;
+                      actions.push({ text: nextKey });
+                      // ctx.setUpdated(true);
+                      // ctx.setForceRefresh(true);
+                      ctx.getModel().refresh();
+                    }
+                  })
+                ]
+              }),
+              items: {
+                path: "csc>actions",
+                template: new sap.m.InputListItem({
+                  content: new sap.m.Input({ value: "{csc>text}" })
+                }),
+                templateShareable: false
+              }
+            })
+          ]
+        });
+        let scenarioHeader = new sap.m.OverflowToolbar({
+          content: [
+            new sap.m.Title({ text: "Scenario" }),
+            scenariosSelect,
+            new sap.m.ToolbarSpacer(),
+            new sap.m.Button({
+              text: "Add",
+              press: function () {
+                let model = this.getModel("csc");
+                let scenarios = model.getProperty("/scenarios");
+                let nextKey = "new" + scenarios.length;
+                scenarios.push({ text: nextKey, actions: [] });
+                model.setProperty("/scenarios", scenarios);
+                scenariosSelect.setSelectedKey(nextKey);
+                scenariosSelect.fireChange({
+                  selectedItem: scenariosSelect.getSelectedItem()
+                });
+              }
+            }),
+            new sap.m.Button({
+              text: "Delete",
+              press: () => {
+                let ctx = actionsListVb.getBindingContext("csc");
+                let model = ctx.getModel();
+                let scenarios = model.getProperty("/scenarios");
+                if (scenarios.length <= 1) {
+                  sap.m.MessageToast.show("Nothing to delete");
+                  return;
+                }
+                const item = ctx.getObject();
+                const index = scenarios.indexOf(item);
+                scenarios.splice(index, 1);
+                model.setProperty("/scenarios", scenarios);
+                scenariosSelect.setSelectedKey(scenarios[index - 1].text);
+                scenariosSelect.fireChange({
+                  selectedItem: scenariosSelect.getSelectedItem()
+                });
+              }
+            })
+          ]
+        });
+        let d = new sap.m.Dialog({
+          showHeader: false,
+          stretch: true,
+          scenarioHeader: scenarioHeader,
+          content: [actionsListVb],
+          afterClose: () => {
+            this.getView().removeDependent(d);
+            d.destroy();
+          },
+          buttons: [
+            new sap.m.Button({
+              text: "Confirm",
+              type: sap.m.ButtonType.Emphasized,
+              press: () => {
+                d.close();
+              }
+            }),
+            new sap.m.Button({
+              text: "Cancel",
+              press: () => {
+                d.close();
+              }
+            })
+          ]
+        });
+        d.addStyleClass(
+          "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--scenarioHeader"
+        );
+        d.setModel(this.getModel("csc"), "csc");
+        this.getView().addDependent(d);
+        actionsListVb.bindElement({
+          path: "/scenarios/0",
+          model: "csc"
+        });
+        d.open();
       },
 
       onImportDataFromJson: function () {

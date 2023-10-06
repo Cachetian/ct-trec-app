@@ -1,5 +1,6 @@
 <mvc:View
     controllerName="ct.trec.recordscreate.controller.OfflineCreate"
+    xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
     xmlns="sap.m"
@@ -8,7 +9,21 @@
         <headerContent>
             <OverflowToolbar>
                 <ToolbarSpacer />
-                 <Button
+                <ObjectStatus
+                    text="场景"
+                    state="Success"
+                />
+                <Select items="{csc>/scenarios}">
+                    <core:Item
+                        key="{csc>text}"
+                        text="{csc>text}"
+                    />
+                </Select>
+                <Button
+                    text="Scenarios"
+                    press="onScenarios"
+                />
+                <Button
                     text="Import JSON"
                     press="onImportDataFromJson"
                 />

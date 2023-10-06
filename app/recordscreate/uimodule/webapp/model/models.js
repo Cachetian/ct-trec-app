@@ -18,17 +18,17 @@ sap.ui.define(
                 return oModel;
             },
             createCheckScenariosModel: function () {
-                const oModel = new JSONModel({ "new": { "text": "" }, "scenarios": [{ "text": "Day" }] });
+                const oModel = new JSONModel({ "new": { "text": "" }, "scenarios": [{ "text": "日常", "actions":[{ "text": "做" }] }] });
                 oModel.setDefaultBindingMode("TwoWay");
                 return oModel;
             },
             createCheckTypesModel: function () {
-                const oModel = new JSONModel({ "new": { "text": "" }, "types": [{ "text": "Do" }] });
+                const oModel = new JSONModel({ "new": { "text": "" }, "types": [{ "text": "做" }] });
                 oModel.setDefaultBindingMode("TwoWay");
                 return oModel;
             },
             createTypedCheckInModel: function () {
-                const oModel = new JSONModel({ "items": [{ "value": "Do", "timestamp": new Date() }] });
+                const oModel = new JSONModel({ "items": [{ "value": "做", "timestamp": new Date() }] });
                 oModel.setDefaultBindingMode("TwoWay");
                 return oModel;
             }
