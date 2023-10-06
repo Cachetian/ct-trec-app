@@ -33,7 +33,9 @@ sap.ui.define(
           }),
           "view"
         );
-        this.getRouter().getRoute("routeSetting").attachMatched(this.handleQueryRouteMatched, this);
+        this.getRouter()
+          .getRoute("routeSetting")
+          .attachMatched(this.handleQueryRouteMatched, this);
       },
 
       onUseRemoteDataSwitchChange: function (oEvent) {
@@ -46,9 +48,13 @@ sap.ui.define(
           }
         }
         oNewArgs["use-remote-data"] = oEvent.getParameter("state");
-        oRouter.navTo("routeSetting", {
-          "?query": oNewArgs
-        }, true);
+        oRouter.navTo(
+          "routeSetting",
+          {
+            "?query": oNewArgs
+          },
+          true
+        );
       },
 
       onHomePress: function () {
