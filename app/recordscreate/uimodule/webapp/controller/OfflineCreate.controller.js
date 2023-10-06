@@ -283,6 +283,15 @@ sap.ui.define(
         d.open();
       },
 
+      onScenarioChange: function (oEvent) {
+        const actions = oEvent
+          .getParameter("selectedItem")
+          .getBindingContext("csc")
+          .getProperty("actions");
+        this.getModel("ckt").setProperty("/types", actions);
+        this.getModel("ckt").refresh();
+      },
+
       onImportDataFromJson: function () {
         let ta = new sap.m.TextArea({
           width: "100%",

@@ -13,7 +13,10 @@
                     text="场景"
                     state="Success"
                 />
-                <Select items="{csc>/scenarios}">
+                <Select
+                    items="{csc>/scenarios}"
+                    change="onScenarioChange"
+                >
                     <core:Item
                         key="{csc>text}"
                         text="{csc>text}"
