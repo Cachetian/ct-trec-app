@@ -295,6 +295,7 @@ sap.ui.define(
       onImportDataFromJson: function () {
         let ta = new sap.m.TextArea({
           width: "100%",
+          rows: 34,
           growing: true
         });
         let d = new sap.m.Dialog({

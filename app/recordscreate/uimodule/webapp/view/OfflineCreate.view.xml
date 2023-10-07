@@ -9,10 +9,6 @@
         <headerContent>
             <OverflowToolbar>
                 <ToolbarSpacer />
-                <ObjectStatus
-                    text="场景"
-                    state="Success"
-                />
                 <Select
                     items="{csc>/scenarios}"
                     change="onScenarioChange"
@@ -23,28 +19,16 @@
                     />
                 </Select>
                 <Button
-                    text="Scenarios"
+                    text="场景"
                     press="onScenarios"
                 />
                 <Button
-                    text="Import"
-                    press="onImportDataFromJson"
-                />
-                <Button
-                    text="ID {view>/deviceId}"
-                    press="onGetDeviceId"
-                />
-                <Button
-                    text="Push"
+                    icon="sap-icon://upload-to-cloud"
                     press="onPushAllDataToUserDataStore"
                 />
                 <Button
-                    text="Pull"
+                    icon="sap-icon://download-from-cloud"
                     press="onPullAllDataFromUserDataStore"
-                />
-                <Button
-                    text="Remove"
-                    press="onRemoveUserDataStore"
                 />
             </OverflowToolbar>
         </headerContent>
@@ -121,7 +105,22 @@
             </Table>
         </VBox>
         <footer>
-            <Bar />
+            <Bar>
+                <contentRight>
+                    <Button
+                        text="ID"
+                        press="onGetDeviceId"
+                    />
+                    <Button
+                        icon="sap-icon://edit"
+                        press="onImportDataFromJson"
+                    />
+                    <Button
+                        icon="sap-icon://delete"
+                        press="onRemoveUserDataStore"
+                    />
+                </contentRight>
+            </Bar>
         </footer>
     </Page>
 </mvc:View>
