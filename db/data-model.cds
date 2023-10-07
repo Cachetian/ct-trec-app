@@ -6,46 +6,46 @@ namespace ct.trec.db;
 /**
  * 10 - Records, transaction data
  */
-entity TypedCheckIns {
+entity Records {
   key ID        : Integer;
       value     : String;
       comment   : String;
       timestamp : Timestamp;
-      scenarios : Association to many CheckInScenarioAssigments
+      scenarios : Association to many RecordScenarioAssigments
                     on scenarios.checkIn = $self;
 }
 
 // technical entity for many to many impl
-entity CheckInScenarioAssigments {
-  key scenario : Association to one CheckInScenarios;
-  key checkIn  : Association to one TypedCheckIns;
+entity RecordScenarioAssigments {
+  key scenario : Association to one Scenarios;
+  key checkIn  : Association to one Records;
 }
 
 /**
  * 20 - Types, master data
  */
-entity CheckInTypes {
+entity Actions {
   key ID        : Integer;
       text      : String;
-      scenarios : Association to many TypeScenarioAssigments
+      scenarios : Association to many ActionScenarioAssigments
                     on scenarios.type = $self;
 }
 
 // technical entity for many to many impl
-entity TypeScenarioAssigments {
-  key scenario : Association to one CheckInScenarios;
-  key type     : Association to one CheckInTypes;
+entity ActionScenarioAssigments {
+  key scenario : Association to one Scenarios;
+  key type     : Association to one Actions;
 }
 
 
 /**
  * 30 - Tags (Scenarios), master data
  */
-entity CheckInScenarios {
+entity Scenarios {
   key ID       : Integer;
       text     : String;
-      types    : Association to many TypeScenarioAssigments
+      types    : Association to many ActionScenarioAssigments
                    on types.scenario = $self;
-      checkIns : Association to many CheckInScenarioAssigments
+      checkIns : Association to many RecordScenarioAssigments
                    on checkIns.scenario = $self;
 }

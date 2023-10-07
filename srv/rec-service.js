@@ -8,44 +8,44 @@ class RecordService extends cds.ApplicationService {
   /** register custom handlers */
   async init() {
     const LOG = cds.log("srv.record");
-    const { CheckInTypes, TypedCheckIns, Scenarios, AllDatas, UserDatas } =
+    const { Actions, Records, Scenarios, AllDatas, UserDatas } =
       this.entities;
     const PersistenceService = await cds.connect.to("PersistenceService");
     const memDB = {
-      CheckInTypes: [{ ID: 0, text: "Do" }],
-      TypedCheckIns: [
+      Actions: [{ ID: 0, text: "Do" }],
+      Records: [
         { value: "Do", timestamp: new Date("2023-06-18T22:11:00.000Z") }
       ],
       Scenarios: [{ ID: 0, text: "Day" }]
     };
 
-    this.on("CREATE", CheckInTypes, (req) => {
-      memDB.CheckInTypes.push(req.data);
-      req.data.ID = memDB.CheckInTypes.length;
+    this.on("CREATE", Actions, (req) => {
+      memDB.Actions.push(req.data);
+      req.data.ID = memDB.Actions.length;
       return req.data;
     });
 
-    this.on("READ", CheckInTypes, (req) => {
-      return memDB.CheckInTypes;
+    this.on("READ", Actions, (req) => {
+      return memDB.Actions;
     });
 
-    this.on("CREATE", TypedCheckIns, (req) => {
-      memDB.TypedCheckIns.push(req.data);
-      req.data.ID = memDB.TypedCheckIns.length;
+    this.on("CREATE", Records, (req) => {
+      memDB.Records.push(req.data);
+      req.data.ID = memDB.Records.length;
       return req.data;
     });
 
-    this.on("READ", TypedCheckIns, (req) => {
-      return memDB.TypedCheckIns;
+    this.on("READ", Records, (req) => {
+      return memDB.Records;
     });
 
     this.on("CREATE", AllDatas, (req) => {
       if (req.data.name === "pushAllData") {
         const data = JSON.parse(req.data.value);
-        memDB.CheckInTypes = data.CheckInTypes.map((it) => {
+        memDB.Actions = data.Actions.map((it) => {
           return { ID: it.ID, text: it.text };
         });
-        memDB.TypedCheckIns = data.TypedCheckIns.map((it) => {
+        memDB.Records = data.Records.map((it) => {
           return {
             ID: it.ID,
             value: it.value,
@@ -61,8 +61,8 @@ class RecordService extends cds.ApplicationService {
       return {
         name: "pullAllData",
         value: JSON.stringify({
-          CheckInTypes: memDB.CheckInTypes,
-          TypedCheckIns: memDB.TypedCheckIns
+          Actions: memDB.Actions,
+          Records: memDB.Records
         })
       };
     });
@@ -106,15 +106,15 @@ class RecordService extends cds.ApplicationService {
 
     this.on("restoreData", async (req) => {
       LOG.info("restoring data from db");
-      memDB.CheckInTypes = await SELECT.from(CheckInTypes);
-      memDB.TypedCheckIns = await SELECT.from(TypedCheckIns);
+      memDB.Actions = await SELECT.from(Actions);
+      memDB.Records = await SELECT.from(Records);
       return "200";
     });
 
     this.on("saveAllData", async (req) => {
       LOG.info("saving all data");
-      await UPSERT.into(CheckInTypes, memDB.CheckInTypes);
-      await UPSERT.into(TypedCheckIns, memDB.TypedCheckIns);
+      await UPSERT.into(Actions, memDB.Actions);
+      await UPSERT.into(Records, memDB.Records);
       return "200";
     });
 

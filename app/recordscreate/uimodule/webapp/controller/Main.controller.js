@@ -81,7 +81,7 @@ sap.ui.define(
             "/state/remoteEventHandlerRegistered"
           )
         ) {
-          eventQueue.emit({ event: "create-TypedCheckIns", data: data });
+          eventQueue.emit({ event: "create-Records", data: data });
         }
         this.getModel("tci").getProperty("/items").push(data);
         this.getModel("tci").refresh();

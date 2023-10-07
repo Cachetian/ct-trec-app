@@ -4,9 +4,9 @@ using ct.trec.db.user as userdb from '../db/data-user';
 @path: 'service/record'
 service RecordService {
   entity UserDatas     as projection on userdb.UserDatas;
-  entity CheckInTypes  as projection on db.CheckInTypes;
-  entity TypedCheckIns as projection on db.TypedCheckIns;
-  entity Scenarios     as projection on db.CheckInScenarios;
+  entity Actions  as projection on db.Actions;
+  entity Records as projection on db.Records;
+  entity Scenarios     as projection on db.Scenarios;
 
   @cds.persistence.exists
   entity AllDatas {

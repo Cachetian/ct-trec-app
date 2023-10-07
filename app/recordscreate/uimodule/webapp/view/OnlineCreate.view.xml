@@ -20,7 +20,7 @@
                 growing="true"
                 growingThreshold="20"
                 items="{ 
-                        path: '/TypedCheckIns',
+                        path: '/Records',
                         sorter: {
                             path: 'timestamp',
                             descending: true,
@@ -31,7 +31,7 @@
             >
                 <headerToolbar>
                     <OverflowToolbar
-                        content="{/CheckInTypes}"
+                        content="{/Actions}"
                         modelContextChange="onTypesModelCtxChange"
                     >
                         <Button

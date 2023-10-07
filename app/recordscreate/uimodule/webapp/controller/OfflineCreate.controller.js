@@ -56,12 +56,12 @@ sap.ui.define(
         if (data) {
           if (data.Scenarios)
             this.getOwnerComponent().getModel("csc").setData(data.Scenarios);
-          if (data.CheckInTypes)
-            this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
-          if (data.TypedCheckIns)
+          if (data.Actions)
+            this.getOwnerComponent().getModel("ckt").setData(data.Actions);
+          if (data.Records)
             this.getOwnerComponent()
               .getModel("tci")
-              .setData(data.TypedCheckIns);
+              .setData(data.Records);
         }
         this.getOwnerComponent()._bTrecInited = true;
       },
@@ -311,8 +311,8 @@ sap.ui.define(
               press: () => {
                 const data = this._preProcessImport(JSON.parse(ta.getValue()));
                 this.getModel("csc").setData(data.Scenarios);
-                this.getModel("ckt").setData(data.CheckInTypes);
-                this.getModel("tci").setData(data.TypedCheckIns);
+                this.getModel("ckt").setData(data.Actions);
+                this.getModel("tci").setData(data.Records);
                 this._saveAllDataToStore();
                 d.close();
               }
@@ -343,8 +343,8 @@ sap.ui.define(
             encodeURIComponent(
               JSON.stringify({
                 Scenarios: this.getModel("csc").getData().scenarios,
-                CheckInTypes: this.getModel("ckt").getData().types,
-                TypedCheckIns: this.getModel("tci").getData().items
+                Actions: this.getModel("ckt").getData().types,
+                Records: this.getModel("tci").getData().items
               })
             )
           )
@@ -362,23 +362,23 @@ sap.ui.define(
       onPullAllDataFromUserDataStore: function () {
         this.getModel().read("/UserDatas('0')", {
           success: (d) => {
-            const { Scenarios, CheckInTypes, TypedCheckIns } = JSON.parse(
+            const { Scenarios, Actions, Records } = JSON.parse(
               decodeURIComponent(atob(d.data))
             );
             const data = this._preProcessImport({
               Scenarios: { scenarios: Scenarios },
-              CheckInTypes: { types: CheckInTypes },
-              TypedCheckIns: { items: TypedCheckIns }
+              Actions: { types: Actions },
+              Records: { items: Records }
             });
-            let recordsCount = data.TypedCheckIns.items.length;
+            let recordsCount = data.Records.items.length;
             MessageBox.confirm("Found " + recordsCount + ", Sure?", {
               actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
               emphasizedAction: MessageBox.Action.OK,
               onClose: function (sAction) {
                 if (sAction === MessageBox.Action.OK) {
                   this.getModel("csc").setData(data.Scenarios);
-                  this.getModel("ckt").setData(data.CheckInTypes);
-                  this.getModel("tci").setData(data.TypedCheckIns);
+                  this.getModel("ckt").setData(data.Actions);
+                  this.getModel("tci").setData(data.Records);
                 }
               }.bind(this)
             });
@@ -443,8 +443,8 @@ sap.ui.define(
       _saveAllDataToStore: function () {
         const data = JSON.stringify({
           Scenarios: this.getModel("csc").getData(),
-          CheckInTypes: this.getModel("ckt").getData(),
-          TypedCheckIns: this.getModel("tci").getData()
+          Actions: this.getModel("ckt").getData(),
+          Records: this.getModel("tci").getData()
         });
         this.getStore().put("stored_data", data);
       },
