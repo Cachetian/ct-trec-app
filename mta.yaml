@@ -8,7 +8,7 @@ modules:
     path: gen/srv
     requires:
       - name: ct-trec-app-auth
-      - name: ct-trec-app-db
+      - name: ct-trec-db
     provides:
       - name: srv-api
         public: true
@@ -40,14 +40,14 @@ modules:
       disk-quota: 512M
       keep-existing-routes: true
       memory: 256M
-  - name: ct-trec-app-db-deployer
+  - name: ct-trec-db-deployer
     type: hdb
     path: gen/db
     requires:
-      - name: ct-trec-app-db
+      - name: ct-trec-db
     parameters:
       buildpack: nodejs_buildpack
-  - name: ct-trec-app-app-content
+  - name: ct-trec-app-content
     type: com.sap.application.content
     path: .
     requires:
@@ -63,9 +63,9 @@ modules:
           target-path: resources/
   - name: cttrecrecordscreate
     type: html5
-    path: app/recordscreate/uimodule
+    path: app/recordscreate
     build-parameters:
-      build-result: dist
+      build-result: uimodule/dist
       builder: custom
       commands:
         - npm install
@@ -81,7 +81,7 @@ resources:
       path: app/router/xs-security.json
       service: xsuaa
       service-plan: application
-  - name: ct-trec-app-db
+  - name: ct-trec-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
