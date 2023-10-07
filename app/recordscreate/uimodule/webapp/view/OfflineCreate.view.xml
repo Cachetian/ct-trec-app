@@ -106,18 +106,17 @@
         </VBox>
         <footer>
             <Bar>
-                <contentRight>
+                <contentLeft>
                     <Button
                         text="ID"
                         press="onGetDeviceId"
                     />
+                    <Label text="{view>/userId}" />
+                </contentLeft>
+                <contentRight>
                     <Button
                         icon="sap-icon://edit"
                         press="onImportDataFromJson"
-                    />
-                    <Button
-                        icon="sap-icon://delete"
-                        press="onRemoveUserDataStore"
                     />
                 </contentRight>
             </Bar>

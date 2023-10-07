@@ -21,6 +21,7 @@ sap.ui.define(
             typesCount: 0,
             itemsCount: 0,
             deviceId: "",
+            userId: "",
             ui: {},
             state: {},
             settings: {}
@@ -54,14 +55,13 @@ sap.ui.define(
           JSON.parse(this.getStore().get("stored_data"))
         );
         if (data) {
+          if (data.ID) this.getModel("view").setProperty("/userId", data.ID);
           if (data.Scenarios)
             this.getOwnerComponent().getModel("csc").setData(data.Scenarios);
           if (data.Actions)
             this.getOwnerComponent().getModel("ckt").setData(data.Actions);
           if (data.Records)
-            this.getOwnerComponent()
-              .getModel("tci")
-              .setData(data.Records);
+            this.getOwnerComponent().getModel("tci").setData(data.Records);
         }
         this.getOwnerComponent()._bTrecInited = true;
       },
@@ -299,6 +299,7 @@ sap.ui.define(
           growing: true
         });
         let d = new sap.m.Dialog({
+          title: "Model Data",
           stretch: true,
           content: [ta],
           afterClose: () => {
@@ -329,12 +330,48 @@ sap.ui.define(
       },
 
       onGetDeviceId: function () {
-        this.getModel().read("/getDeviceId()", {
-          success: function (d) {
-            this.getModel("view").setProperty("/deviceId", d.getDeviceId);
-            sap.m.MessageToast.show("ID: " + d.getDeviceId);
-          }.bind(this)
+        let input = new sap.m.Input({
+          value: this.getModel("view").getProperty("/userId")
         });
+        let d = new sap.m.Dialog({
+          title: "User ID",
+          content: [input],
+          afterClose: () => {
+            this._saveAllDataToStore();
+            d.destroy();
+          },
+          buttons: [
+            new sap.m.Button({
+              text: "Device ID",
+              press: () => {
+                this.getModel().read("/getDeviceId()", {
+                  success: function (d) {
+                    this.getModel("view").setProperty(
+                      "/deviceId",
+                      d.getDeviceId
+                    );
+                    sap.m.MessageToast.show("Device ID: " + d.getDeviceId);
+                  }.bind(this)
+                });
+              }
+            }),
+            new sap.m.Button({
+              text: "Confirm",
+              type: sap.m.ButtonType.Emphasized,
+              press: () => {
+                this.getModel("view").setProperty("/userId", input.getValue());
+                d.close();
+              }
+            }),
+            new sap.m.Button({
+              text: "Cancel",
+              press: () => {
+                d.close();
+              }
+            })
+          ]
+        });
+        d.open();
       },
 
       onPushAllDataToUserDataStore: function () {
@@ -349,6 +386,10 @@ sap.ui.define(
             )
           )
         };
+        const userId = this.getModel("view").getProperty("/userId");
+        if (userId) {
+          data.ID = userId;
+        }
         this.getModel().create("/UserDatas", data, {
           success: () => {
             sap.m.MessageToast.show("success");
@@ -360,7 +401,13 @@ sap.ui.define(
       },
 
       onPullAllDataFromUserDataStore: function () {
-        this.getModel().read("/UserDatas('0')", {
+        const DUMMY = "0";
+        let ID = DUMMY;
+        const userId = this.getModel("view").getProperty("/userId");
+        if (userId) {
+          ID = userId;
+        }
+        this.getModel().read("/UserDatas('" + ID + "')", {
           success: (d) => {
             const { Scenarios, Actions, Records } = JSON.parse(
               decodeURIComponent(atob(d.data))
@@ -442,6 +489,7 @@ sap.ui.define(
 
       _saveAllDataToStore: function () {
         const data = JSON.stringify({
+          ID: this.getModel("view").getProperty("/userId"),
           Scenarios: this.getModel("csc").getData(),
           Actions: this.getModel("ckt").getData(),
           Records: this.getModel("tci").getData()

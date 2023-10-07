@@ -8,8 +8,7 @@ class RecordService extends cds.ApplicationService {
   /** register custom handlers */
   async init() {
     const LOG = cds.log("srv.record");
-    const { Actions, Records, Scenarios, AllDatas, UserDatas } =
-      this.entities;
+    const { Actions, Records, Scenarios, AllDatas, UserDatas } = this.entities;
     const PersistenceService = await cds.connect.to("PersistenceService");
     const memDB = {
       Actions: [{ ID: 0, text: "Do" }],
@@ -74,8 +73,13 @@ class RecordService extends cds.ApplicationService {
         .createHash("md5")
         .update(clientIP + userAgent)
         .digest("hex");
-      LOG.info("Read user data with ID: ", ID);
-      // req.data.ID = ID;
+      // use customized ID
+      let userId = req.data.ID;
+      const DUMMY = "0";
+      if (userId !== DUMMY) {
+        ID = crypto.createHash("md5").update(userId).digest("hex");
+      }
+      LOG.info("Read user data with ID:", ID);
       req.query.SELECT.from.ref[0].where[2].val = ID;
     });
 
@@ -86,7 +90,12 @@ class RecordService extends cds.ApplicationService {
         .createHash("md5")
         .update(clientIP + userAgent)
         .digest("hex");
-      LOG.info("Push to user data with ID: ", ID);
+      // use customized ID
+      let userId = req.data.ID;
+      if (userId) {
+        ID = crypto.createHash("md5").update(userId).digest("hex");
+      }
+      LOG.info("Push to user data with ID:", ID);
       req.data.ID = ID;
       await UPSERT.into(UserDatas, req.data);
       return req.data;
@@ -100,7 +109,6 @@ class RecordService extends cds.ApplicationService {
         .update(clientIP + userAgent)
         .digest("hex");
       LOG.info("Remove user data with ID: ", ID);
-      // req.data.ID = ID;
       req.query.DELETE.from.ref[0].where[2].val = ID;
     });
 
