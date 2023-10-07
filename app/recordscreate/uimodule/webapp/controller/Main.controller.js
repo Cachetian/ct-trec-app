@@ -35,7 +35,9 @@ sap.ui.define(
           }),
           "view"
         );
-        this.getRouter().getRoute("routeMain").attachMatched(this.handleQueryRouteMatched, this);
+        this.getRouter()
+          .getRoute("routeMain")
+          .attachMatched(this.handleQueryRouteMatched, this);
       },
 
       onRecordPress: function () {
@@ -55,12 +57,16 @@ sap.ui.define(
         const toolbar = oEvent.getSource();
         // lasy
         const handleReqComp = () => {
-          this.getOwnerComponent().getModel().detachRequestCompleted(handleReqComp);
+          this.getOwnerComponent()
+            .getModel()
+            .detachRequestCompleted(handleReqComp);
           if (toolbar.indexOfContent(this._title) < 0) {
             toolbar.insertContent(this._title, 0);
           }
-        }
-        this.getOwnerComponent().getModel().attachRequestCompleted(handleReqComp, this);
+        };
+        this.getOwnerComponent()
+          .getModel()
+          .attachRequestCompleted(handleReqComp, this);
       },
 
       onTypedCheckIn: function (oEvent) {

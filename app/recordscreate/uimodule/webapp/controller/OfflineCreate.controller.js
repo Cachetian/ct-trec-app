@@ -20,11 +20,8 @@ sap.ui.define(
             messageCount: 0,
             typesCount: 0,
             itemsCount: 0,
-            ui: {
-              cmdPanelExpanded: false,
-              checkInTypesEditable: false,
-              checkInItemsEditable: false
-            },
+            deviceId: "",
+            ui: {},
             state: {},
             settings: {}
           }),
@@ -57,8 +54,14 @@ sap.ui.define(
           JSON.parse(this.getStore().get("stored_data"))
         );
         if (data) {
-          this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
-          this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
+          if (data.Scenarios)
+            this.getOwnerComponent().getModel("csc").setData(data.Scenarios);
+          if (data.CheckInTypes)
+            this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
+          if (data.TypedCheckIns)
+            this.getOwnerComponent()
+              .getModel("tci")
+              .setData(data.TypedCheckIns);
         }
         this.getOwnerComponent()._bTrecInited = true;
       },
@@ -69,32 +72,6 @@ sap.ui.define(
 
       onSettingPress: function () {
         this.navToW("routeSetting");
-      },
-
-      onTypesModelCtxChange: function (oEvent) {
-        if (!this._title) {
-          this._title = new sap.m.Label({
-            text: "记录 ({view>/itemsCount})"
-          });
-        }
-        const toolbar = oEvent.getSource();
-        // lasy
-        const handleReqComp = () => {
-          this.getOwnerComponent()
-            .getModel()
-            .detachRequestCompleted(handleReqComp);
-          if (toolbar.indexOfContent(this._title) < 0) {
-            toolbar.insertContent(this._title, 0);
-          }
-        };
-        this.getOwnerComponent()
-          .getModel()
-          .attachRequestCompleted(handleReqComp, this);
-        let deferred = new Deferred();
-        deferred.promise.then(handleReqComp);
-        setTimeout(() => {
-          deferred.resolve();
-        }, 200);
       },
 
       onTypedCheckIn: function (oEvent) {
@@ -126,7 +103,7 @@ sap.ui.define(
             afterClose: () => this._dialog.unbindElement()
           });
           this._dialog.addStyleClass(
-            "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader"
+            "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--scenarioHeader"
           );
         }
         const dialog = this._dialog;
@@ -147,9 +124,178 @@ sap.ui.define(
         this._saveAllDataToStore();
       },
 
+      onScenarios: function () {
+        let scenariosSelect = new sap.m.Select({
+          selectedKey: "csc>/selectedKey",
+          items: {
+            path: "csc>/scenarios",
+            template: new sap.ui.core.Item({
+              key: "{csc>text}",
+              text: "{csc>text}"
+            }),
+            templateShareable: false
+          },
+          change: (oEvent) => {
+            actionsListVb.bindElement({
+              path: oEvent
+                .getParameter("selectedItem")
+                .getBindingContext("csc")
+                .getPath(),
+              model: "csc"
+            });
+          }
+        });
+        let actionsListVb = new sap.m.VBox({
+          items: [
+            new sap.m.HBox({
+              alignItems: "Center",
+              items: [
+                new sap.m.Label({
+                  text: "Text",
+                  showColon: true,
+                  width: "3rem"
+                }),
+                new sap.m.Input({ value: "{csc>text}" })
+              ]
+            }),
+            new sap.m.List({
+              mode: "Delete",
+              delete: (oEvent) => {
+                const ctx = actionsListVb.getBindingContext("csc");
+                const array = ctx.getProperty("actions");
+                const item = oEvent
+                  .getParameter("listItem")
+                  .getBindingContext("csc")
+                  .getObject();
+                const index = array.indexOf(item);
+                array.splice(index, 1);
+                ctx.getModel().setProperty("actions", array);
+                ctx.getModel().refresh();
+              },
+              headerToolbar: new sap.m.OverflowToolbar({
+                content: [
+                  new sap.m.Title({ text: "actions" }),
+                  new sap.m.ToolbarSpacer(),
+                  new sap.m.Button({
+                    text: "Add",
+                    press: function (oEvent) {
+                      let ctx = oEvent.getSource().getBindingContext("csc");
+                      let actions = ctx.getProperty("actions");
+                      let nextKey = "new" + actions.length;
+                      actions.push({ text: nextKey });
+                      ctx.getModel().refresh();
+                    }
+                  })
+                ]
+              }),
+              items: {
+                path: "csc>actions",
+                template: new sap.m.InputListItem({
+                  content: new sap.m.Input({ value: "{csc>text}" })
+                }),
+                templateShareable: false
+              }
+            })
+          ]
+        });
+        let scenarioHeader = new sap.m.OverflowToolbar({
+          content: [
+            new sap.m.Title({ text: "Scenario" }),
+            scenariosSelect,
+            new sap.m.ToolbarSpacer(),
+            new sap.m.Button({
+              text: "Add",
+              press: function () {
+                let model = this.getModel("csc");
+                let scenarios = model.getProperty("/scenarios");
+                let nextKey = "new" + scenarios.length;
+                scenarios.push({ text: nextKey, actions: [] });
+                model.setProperty("/scenarios", scenarios);
+                scenariosSelect.setSelectedKey(nextKey);
+                scenariosSelect.fireChange({
+                  selectedItem: scenariosSelect.getSelectedItem()
+                });
+              }
+            }),
+            new sap.m.Button({
+              text: "Delete",
+              press: () => {
+                let ctx = actionsListVb.getBindingContext("csc");
+                let model = ctx.getModel();
+                let scenarios = model.getProperty("/scenarios");
+                if (scenarios.length <= 1) {
+                  sap.m.MessageToast.show("Nothing to delete");
+                  return;
+                }
+                const item = ctx.getObject();
+                const index = scenarios.indexOf(item);
+                scenarios.splice(index, 1);
+                model.setProperty("/scenarios", scenarios);
+                scenariosSelect.setSelectedKey(scenarios[index - 1].text);
+                scenariosSelect.fireChange({
+                  selectedItem: scenariosSelect.getSelectedItem()
+                });
+              }
+            })
+          ]
+        });
+        let d = new sap.m.Dialog({
+          showHeader: false,
+          stretch: true,
+          subHeader: scenarioHeader,
+          content: [actionsListVb],
+          afterClose: () => {
+            this.getView().removeDependent(d);
+            d.destroy();
+            this._saveAllDataToStore();
+          },
+          buttons: [
+            new sap.m.Button({
+              text: "Confirm",
+              type: sap.m.ButtonType.Emphasized,
+              press: () => {
+                // copy to check in types
+                const actions = actionsListVb
+                  .getBindingContext("csc")
+                  .getProperty("actions");
+                this.getModel("ckt").setProperty("/types", actions);
+                this.getModel("ckt").refresh();
+                d.close();
+              }
+            }),
+            new sap.m.Button({
+              text: "Cancel",
+              press: () => {
+                d.close();
+              }
+            })
+          ]
+        });
+        d.addStyleClass(
+          "sapUiResponsivePadding--content sapUiResponsivePadding--header sapUiResponsivePadding--footer sapUiResponsivePadding--subHeader"
+        );
+        d.setModel(this.getModel("csc"), "csc");
+        this.getView().addDependent(d);
+        actionsListVb.bindElement({
+          path: "/scenarios/0",
+          model: "csc"
+        });
+        d.open();
+      },
+
+      onScenarioChange: function (oEvent) {
+        const actions = oEvent
+          .getParameter("selectedItem")
+          .getBindingContext("csc")
+          .getProperty("actions");
+        this.getModel("ckt").setProperty("/types", actions);
+        this.getModel("ckt").refresh();
+      },
+
       onImportDataFromJson: function () {
         let ta = new sap.m.TextArea({
           width: "100%",
+          rows: 34,
           growing: true
         });
         let d = new sap.m.Dialog({
@@ -164,8 +310,10 @@ sap.ui.define(
               type: sap.m.ButtonType.Emphasized,
               press: () => {
                 const data = this._preProcessImport(JSON.parse(ta.getValue()));
+                this.getModel("csc").setData(data.Scenarios);
                 this.getModel("ckt").setData(data.CheckInTypes);
                 this.getModel("tci").setData(data.TypedCheckIns);
+                this._saveAllDataToStore();
                 d.close();
               }
             }),
@@ -183,18 +331,22 @@ sap.ui.define(
       onGetDeviceId: function () {
         this.getModel().read("/getDeviceId()", {
           success: function (d) {
+            this.getModel("view").setProperty("/deviceId", d.getDeviceId);
             sap.m.MessageToast.show("ID: " + d.getDeviceId);
-          }
+          }.bind(this)
         });
       },
 
       onPushAllDataToUserDataStore: function () {
         const data = {
           data: btoa(
-            JSON.stringify({
-              CheckInTypes: this.getModel("ckt").getData().types,
-              TypedCheckIns: this.getModel("tci").getData().items
-            })
+            encodeURIComponent(
+              JSON.stringify({
+                Scenarios: this.getModel("csc").getData().scenarios,
+                CheckInTypes: this.getModel("ckt").getData().types,
+                TypedCheckIns: this.getModel("tci").getData().items
+              })
+            )
           )
         };
         this.getModel().create("/UserDatas", data, {
@@ -210,8 +362,11 @@ sap.ui.define(
       onPullAllDataFromUserDataStore: function () {
         this.getModel().read("/UserDatas('0')", {
           success: (d) => {
-            const { CheckInTypes, TypedCheckIns } = JSON.parse(atob(d.data));
+            const { Scenarios, CheckInTypes, TypedCheckIns } = JSON.parse(
+              decodeURIComponent(atob(d.data))
+            );
             const data = this._preProcessImport({
+              Scenarios: { scenarios: Scenarios },
               CheckInTypes: { types: CheckInTypes },
               TypedCheckIns: { items: TypedCheckIns }
             });
@@ -221,6 +376,7 @@ sap.ui.define(
               emphasizedAction: MessageBox.Action.OK,
               onClose: function (sAction) {
                 if (sAction === MessageBox.Action.OK) {
+                  this.getModel("csc").setData(data.Scenarios);
                   this.getModel("ckt").setData(data.CheckInTypes);
                   this.getModel("tci").setData(data.TypedCheckIns);
                 }
@@ -286,6 +442,7 @@ sap.ui.define(
 
       _saveAllDataToStore: function () {
         const data = JSON.stringify({
+          Scenarios: this.getModel("csc").getData(),
           CheckInTypes: this.getModel("ckt").getData(),
           TypedCheckIns: this.getModel("tci").getData()
         });

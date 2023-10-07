@@ -1,5 +1,6 @@
 <mvc:View
     controllerName="ct.trec.recordscreate.controller.OfflineCreate"
+    xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
     xmlns="sap.m"
@@ -8,25 +9,26 @@
         <headerContent>
             <OverflowToolbar>
                 <ToolbarSpacer />
-                 <Button
-                    text="Import JSON"
-                    press="onImportDataFromJson"
+                <Select
+                    items="{csc>/scenarios}"
+                    change="onScenarioChange"
+                >
+                    <core:Item
+                        key="{csc>text}"
+                        text="{csc>text}"
+                    />
+                </Select>
+                <Button
+                    text="场景"
+                    press="onScenarios"
                 />
                 <Button
-                    text="Get ID"
-                    press="onGetDeviceId"
-                />
-                <Button
-                    text="Push"
+                    icon="sap-icon://upload-to-cloud"
                     press="onPushAllDataToUserDataStore"
                 />
                 <Button
-                    text="Pull"
+                    icon="sap-icon://download-from-cloud"
                     press="onPullAllDataFromUserDataStore"
-                />
-                <Button
-                    text="Remove"
-                    press="onRemoveUserDataStore"
                 />
             </OverflowToolbar>
         </headerContent>
@@ -50,16 +52,18 @@
                     }"
             >
                 <headerToolbar>
-                    <OverflowToolbar
-                        content="{ckt>/types}"
-                        modelContextChange="onTypesModelCtxChange"
-                    >
+                    <Toolbar>
+                        <Label text="记录 ({view>/itemsCount})" />
+                    </Toolbar>
+                </headerToolbar>
+                <infoToolbar>
+                    <OverflowToolbar content="{ckt>/types}">
                         <Button
                             text="{ckt>text}"
                             press="onTypedCheckIn"
                         />
                     </OverflowToolbar>
-                </headerToolbar>
+                </infoToolbar>
                 <columns>
                     <Column width="8rem">
                         <Text text="动作" />
@@ -101,7 +105,22 @@
             </Table>
         </VBox>
         <footer>
-            <Bar />
+            <Bar>
+                <contentRight>
+                    <Button
+                        text="ID"
+                        press="onGetDeviceId"
+                    />
+                    <Button
+                        icon="sap-icon://edit"
+                        press="onImportDataFromJson"
+                    />
+                    <Button
+                        icon="sap-icon://delete"
+                        press="onRemoveUserDataStore"
+                    />
+                </contentRight>
+            </Bar>
         </footer>
     </Page>
 </mvc:View>
