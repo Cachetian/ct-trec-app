@@ -56,12 +56,12 @@ sap.ui.define(
         // use remote data
         const oDataModel = this.getOwnerComponent().getModel();
         oDataModel.metadataLoaded(true).then(() => {
-          oDataModel.read("/CheckInTypes", {
+          oDataModel.read("/Actions", {
             success: (d) => {
               this.getModel("ckt").setProperty("/types", d.results);
             }
           });
-          oDataModel.read("/TypedCheckIns", {
+          oDataModel.read("/Records", {
             success: (d) => {
               this.getModel("tci").setProperty("/items", d.results);
             }
@@ -69,9 +69,9 @@ sap.ui.define(
           eventQueue.register("complete", () => {
             sap.m.MessageToast.show("success");
           });
-          eventQueue.register("create-CheckInTypes", (data) => {
+          eventQueue.register("create-Actions", (data) => {
             return new Promise((resolve, reject) => {
-              this.getModel().create("/CheckInTypes", data, {
+              this.getModel().create("/Actions", data, {
                 success: () => {
                   resolve();
                 },
@@ -82,9 +82,9 @@ sap.ui.define(
               });
             });
           });
-          eventQueue.register("create-TypedCheckIns", (data) => {
+          eventQueue.register("create-Records", (data) => {
             return new Promise((resolve, reject) => {
-              this.getModel().create("/TypedCheckIns", data, {
+              this.getModel().create("/Records", data, {
                 success: () => {
                   resolve();
                 },
@@ -134,14 +134,14 @@ sap.ui.define(
 
       onTypedCheckIn: function (oEvent) {
         let text = oEvent.getSource().getBindingContext().getObject().text;
-        this.getModel().read("/TypedCheckIns/$count", {
+        this.getModel().read("/Records/$count", {
           success: (count) => {
             const data = {
               ID: parseInt(count) + 1,
               value: text,
               timestamp: new Date()
             };
-            eventQueue.emit({ event: "create-TypedCheckIns", data: data });
+            eventQueue.emit({ event: "create-Records", data: data });
           }
         });
       },

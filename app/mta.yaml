@@ -3,7 +3,7 @@ ID: trecui
 description: time reocrd app ui
 version: 1.0.0
 modules:
-  - name: ct-trec-app-app-content
+  - name: ct-trec-app-content
     type: com.sap.application.content
     path: .
     requires:

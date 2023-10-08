@@ -157,12 +157,12 @@ sap.ui.define(
             // use remote data
             const oDataModel = this.getOwnerComponent().getModel();
             oDataModel.metadataLoaded(true).then(() => {
-              oDataModel.read("/CheckInTypes", {
+              oDataModel.read("/Actions", {
                 success: (d) => {
                   this.getModel("ckt").setProperty("/types", d.results);
                 },
               });
-              oDataModel.read("/TypedCheckIns", {
+              oDataModel.read("/Records", {
                 success: (d) => {
                   this.getModel("tci").setProperty("/items", d.results);
                 },
@@ -170,9 +170,9 @@ sap.ui.define(
               eventQueue.register("complete", () => {
                 sap.m.MessageToast.show("success");
               });
-              eventQueue.register("create-CheckInTypes", (data) => {
+              eventQueue.register("create-Actions", (data) => {
                 return new Promise((resolve, reject) => {
-                  this.getModel().create("/CheckInTypes", data, {
+                  this.getModel().create("/Actions", data, {
                     success: () => {
                       resolve();
                     },
@@ -185,9 +185,9 @@ sap.ui.define(
                   });
                 });
               });
-              eventQueue.register("create-TypedCheckIns", (data) => {
+              eventQueue.register("create-Records", (data) => {
                 return new Promise((resolve, reject) => {
-                  this.getModel().create("/TypedCheckIns", data, {
+                  this.getModel().create("/Records", data, {
                     success: () => {
                       resolve();
                     },
@@ -213,10 +213,10 @@ sap.ui.define(
             if (data) {
               this.getOwnerComponent()
                 .getModel("ckt")
-                .setData(data.CheckInTypes);
+                .setData(data.Actions);
               this.getOwnerComponent()
                 .getModel("tci")
-                .setData(data.TypedCheckIns);
+                .setData(data.Records);
             }
           }
           this.getOwnerComponent()._bTrecInited = true;
@@ -231,8 +231,8 @@ sap.ui.define(
           if (!data) {
             return;
           }
-          if (data.TypedCheckIns.items) {
-            data.TypedCheckIns.items.forEach((it) => {
+          if (data.Records.items) {
+            data.Records.items.forEach((it) => {
               it.timestamp = new Date(it.timestamp);
             });
           }

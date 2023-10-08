@@ -3,8 +3,8 @@ using ct.trec.db.user as userdb from '../db/data-user';
 
 @path: 'service/persistence'
 service PersistenceService {
-  entity PersCheckInTypes  as projection on db.CheckInTypes;
-  entity PersTypedCheckIns as projection on db.TypedCheckIns;
-  entity PersScenarios     as projection on db.CheckInScenarios;
+  entity PersActions  as projection on db.Actions;
+  entity PersRecords as projection on db.Records;
+  entity PersScenarios     as projection on db.Scenarios;
   entity PersUserDatas     as projection on userdb.UserDatas;
 }

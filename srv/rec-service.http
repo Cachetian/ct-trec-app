@@ -1,23 +1,9 @@
-### GET PersCheckInTypes
-GET http://localhost:4004/v2/service/record/PersCheckInTypes
+### GET PersActions
+GET http://localhost:4004/v2/service/record/PersActions
 Authorization: Basic dXNlcjpwYXNz
 
-### POST PersCheckInTypes
-POST http://localhost:4004/v2/service/record/PersCheckInTypes
-Authorization: Basic dXNlcjpwYXNz
-Content-Type: application/json
-
-{
-    "ID": 1,
-    "text" : "Do"
-}
-
-### GET CheckInTypes
-GET http://localhost:4004/v2/service/record/CheckInTypes
-Authorization: Basic dXNlcjpwYXNz
-
-### POST CheckInTypes
-POST http://localhost:4004/v2/service/record/CheckInTypes
+### POST PersActions
+POST http://localhost:4004/v2/service/record/PersActions
 Authorization: Basic dXNlcjpwYXNz
 Content-Type: application/json
 
@@ -26,12 +12,26 @@ Content-Type: application/json
     "text" : "Do"
 }
 
-### GET PersTypedCheckIns
-GET http://localhost:4004/v2/service/record/PersTypedCheckIns
+### GET Actions
+GET http://localhost:4004/v2/service/record/Actions
 Authorization: Basic dXNlcjpwYXNz
 
-### POST PersTypedCheckIns
-POST http://localhost:4004/v2/service/record/PersTypedCheckIns
+### POST Actions
+POST http://localhost:4004/v2/service/record/Actions
+Authorization: Basic dXNlcjpwYXNz
+Content-Type: application/json
+
+{
+    "ID": 1,
+    "text" : "Do"
+}
+
+### GET PersRecords
+GET http://localhost:4004/v2/service/record/PersRecords
+Authorization: Basic dXNlcjpwYXNz
+
+### POST PersRecords
+POST http://localhost:4004/v2/service/record/PersRecords
 Authorization: Basic dXNlcjpwYXNz
 Content-Type: application/json
 
@@ -41,12 +41,12 @@ Content-Type: application/json
    "timestamp": "/Date(1690908403041)/"
 }
 
-### GET TypedCheckIns
-GET http://localhost:4004/v2/service/record/TypedCheckIns
+### GET Records
+GET http://localhost:4004/v2/service/record/Records
 Authorization: Basic dXNlcjpwYXNz
 
-### POST TypedCheckIns
-POST http://localhost:4004/v2/service/record/TypedCheckIns
+### POST Records
+POST http://localhost:4004/v2/service/record/Records
 Authorization: Basic dXNlcjpwYXNz
 Content-Type: application/json
 

@@ -76,7 +76,7 @@ sap.ui.define(
             "/state/remoteEventHandlerRegistered"
           )
         ) {
-          eventQueue.emit({ event: "create-CheckInTypes", data: data });
+          eventQueue.emit({ event: "create-Actions", data: data });
         }
         this.getModel("ckt").getProperty("/types").push(data);
         this.getModel("ckt").setProperty("/new/text", "");
@@ -139,7 +139,7 @@ sap.ui.define(
             "/state/remoteEventHandlerRegistered"
           )
         ) {
-          eventQueue.emit({ event: "create-TypedCheckIns", data: data });
+          eventQueue.emit({ event: "create-Records", data: data });
         }
         this.getModel("tci").getProperty("/items").push(data);
         this.getModel("tci").refresh();
@@ -194,8 +194,8 @@ sap.ui.define(
           const data = {
             name: "pushAllData",
             value: JSON.stringify({
-              CheckInTypes: this.getModel("ckt").getData().types,
-              TypedCheckIns: this.getModel("tci").getData().items
+              Actions: this.getModel("ckt").getData().types,
+              Records: this.getModel("tci").getData().items
             })
           };
           this.getModel().create("/AllDatas", data, {
@@ -213,15 +213,15 @@ sap.ui.define(
         if (this.getModel("view").getProperty("/settings/use_remote_data")) {
           this.getModel().read("/AllDatas", {
             success: (d) => {
-              const { CheckInTypes, TypedCheckIns } = JSON.parse(
+              const { Actions, Records } = JSON.parse(
                 d.results[0].value
               );
               const data = this._preProcessImport({
-                CheckInTypes: { types: CheckInTypes },
-                TypedCheckIns: { items: TypedCheckIns }
+                Actions: { types: Actions },
+                Records: { items: Records }
               });
-              this.getModel("ckt").setData(data.CheckInTypes);
-              this.getModel("tci").setData(data.TypedCheckIns);
+              this.getModel("ckt").setData(data.Actions);
+              this.getModel("tci").setData(data.Records);
             },
             error: (err) => {
               sap.m.MessageToast.show(`failed with msg: ${err.message}`);
@@ -232,8 +232,8 @@ sap.ui.define(
 
       onStoreAllData: function () {
         const data = JSON.stringify({
-          CheckInTypes: this.getModel("ckt").getData(),
-          TypedCheckIns: this.getModel("tci").getData()
+          Actions: this.getModel("ckt").getData(),
+          Records: this.getModel("tci").getData()
         });
         this.getStore().put("stored_data", data);
         sap.m.MessageToast.show("saved");
@@ -249,15 +249,15 @@ sap.ui.define(
           JSON.parse(this.getStore().get("stored_data"))
         );
         if (data) {
-          this.getOwnerComponent().getModel("ckt").setData(data.CheckInTypes);
-          this.getOwnerComponent().getModel("tci").setData(data.TypedCheckIns);
+          this.getOwnerComponent().getModel("ckt").setData(data.Actions);
+          this.getOwnerComponent().getModel("tci").setData(data.Records);
         }
       },
 
       onExportAllData: function () {
         const data = {
-          CheckInTypes: this.getModel("ckt").getData(),
-          TypedCheckIns: this.getModel("tci").getData()
+          Actions: this.getModel("ckt").getData(),
+          Records: this.getModel("tci").getData()
         };
         this.getModel("view").setProperty(
           "/message",
@@ -269,8 +269,8 @@ sap.ui.define(
         const data = this._preProcessImport(
           JSON.parse(this.getModel("view").getProperty("/message"))
         );
-        this.getModel("ckt").setData(data.CheckInTypes);
-        this.getModel("tci").setData(data.TypedCheckIns);
+        this.getModel("ckt").setData(data.Actions);
+        this.getModel("tci").setData(data.Records);
       },
 
       onTypesUpdateFinished: function (oEvent) {
